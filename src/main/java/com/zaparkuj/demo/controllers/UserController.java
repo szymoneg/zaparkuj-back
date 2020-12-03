@@ -6,10 +6,9 @@ import com.zaparkuj.demo.repositories.UserRepository;
 import com.zaparkuj.demo.services.UserService;
 import com.zaparkuj.demo.services.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
@@ -20,12 +19,21 @@ public class UserController {
 
     UserServiceImpl userService = new UserServiceImpl();
 
-    @GetMapping("/regiser")
-    public @ResponseBody String insertUser(){
-        User newUser = new User();
+//    @GetMapping("/regiser")
+//    public @ResponseBody String insertUser(){
+//        User newUser = new User();
+//        userService.insertUser(newUser);
+//        userRepository.save(newUser);
+//
+//        return "created";
+//    }
+
+    @PostMapping("/register")
+    public ResponseEntity<Void> insertUser(@RequestBody User newUser){
         userService.insertUser(newUser);
         userRepository.save(newUser);
 
-        return "created";
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
 }

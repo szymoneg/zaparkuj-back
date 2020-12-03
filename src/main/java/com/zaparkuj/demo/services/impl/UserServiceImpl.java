@@ -6,9 +6,9 @@ import com.zaparkuj.demo.services.UserService;
 public class UserServiceImpl implements UserService {
     @Override
     public User insertUser(User user) {
-        user.setUsername("kornelkornel");
-        user.setPassword("123");
-        user.setEmail("kornel@mail.com");
+        user.setUsername(user.getUsername());
+        user.setPassword(user.getPassword());
+        user.setEmail(user.getEmail());
 
         return user;
     }
