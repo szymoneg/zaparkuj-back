@@ -1,9 +1,10 @@
 package com.zaparkuj.demo.services;
 
 import com.zaparkuj.demo.entities.User;
-import org.springframework.context.annotation.Configuration;
+import com.zaparkuj.demo.repositories.UserRepository;
+import org.springframework.http.ResponseEntity;
 
 
 public interface UserService {
-    User insertUser(User user);
+    ResponseEntity<String> insertUser(User user, UserRepository userRepository);
 }
