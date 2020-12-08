@@ -9,5 +9,5 @@ import java.util.ArrayList;
 @Repository
 public interface CarRepository extends CrudRepository<Car, Long> {
 
-    Car findByCar(String licenceNumber);
+    Car findByLicencePlate(String licenceNumber);
 }

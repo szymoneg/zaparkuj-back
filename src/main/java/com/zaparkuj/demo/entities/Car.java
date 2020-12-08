@@ -29,8 +29,8 @@ public class Car {
     @Column(name = "licence_plate")
     private String licencePlate;
 
-    @Column(name = "users_idusers")
     @OneToOne
+    @JoinColumn(name = "users_idusers")
     private User holderCar;
 
     public Car(String mark, String model, String licencePlate, User holderCar) {

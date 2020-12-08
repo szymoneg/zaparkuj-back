@@ -11,7 +11,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public ResponseEntity<String> insertCar(Car car, CarRepository carRepository) {
 
-        if(carRepository.findByCar(car.getLicencePlate()) != null) {
+        if(carRepository.findByLicencePlate(car.getLicencePlate()) != null) {
             carRepository.save(car);
             return new ResponseEntity<>("inserted", HttpStatus.ACCEPTED);
         }
