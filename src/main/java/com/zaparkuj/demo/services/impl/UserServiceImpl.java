@@ -13,7 +13,7 @@ public class UserServiceImpl implements UserService {
 //        System.out.println(user.getUsername());
 //        System.out.println(userRepository.toString());
         //TODO dodac sprawdzenie hasła, zrobic deklaracje userRespository w serviceimpl
-        if (userRepository.findByUsername(user.getUsername()) != null) {
+        if (userRepository.findByUsername(user.getUsername()).isEmpty()) {
             user.setUsername(user.getUsername());
             user.setPassword(user.getPassword());
             user.setEmail(user.getEmail());

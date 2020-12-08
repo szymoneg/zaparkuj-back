@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 public class UserController {
+
     @Autowired
     public UserRepository userRepository;
+
 
     UserServiceImpl userService = new UserServiceImpl();
 
@@ -18,15 +20,4 @@ public class UserController {
     public ResponseEntity<String> insertUserController(@RequestBody User user){
         return userService.insertUser(user,userRepository);
     }
-
-//    @PostMapping("/login")
-//    public ResponseEntity<List> loginUser(@RequestBody User user){
-//        List<User> loginUser = userRepository.findByUsername(user.getUsername());
-//        if (loginUser.isEmpty()){
-//            return new ResponseEntity<>(HttpStatus.CONFLICT);
-//        }else{
-//            return new ResponseEntity<>(loginUser,HttpStatus.ACCEPTED);
-//        }
-//    }
-
 }

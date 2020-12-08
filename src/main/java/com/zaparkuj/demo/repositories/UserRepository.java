@@ -10,5 +10,5 @@ import java.util.ArrayList;
 
 @Repository
 public interface UserRepository extends CrudRepository<User,Long> {
-    User findByUsername(String username);
+    ArrayList<User> findByUsername(String username);
 }

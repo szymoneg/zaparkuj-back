@@ -8,6 +8,5 @@ import java.util.ArrayList;
 
 @Repository
 public interface CarRepository extends CrudRepository<Car, Long> {
-
-    Car findByLicencePlate(String licenceNumber);
+    ArrayList<Car> findByLicencePlate(String licenceNumber);
 }
