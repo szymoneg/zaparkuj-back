@@ -1,6 +1,6 @@
 package com.zaparkuj.demo.entities;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.*;
@@ -13,7 +13,7 @@ public class User {
     @Id
     @Column(name = "idusers")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    long idUser;
+    private long idUser;
 
     String username;
     String email;
