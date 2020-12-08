@@ -14,6 +14,7 @@ public class UserController {
 
     UserServiceImpl userService = new UserServiceImpl();
 
+    @CrossOrigin
     @PostMapping("/register")
     public ResponseEntity<String> insertUserController(@RequestBody User user){
         return userService.insertUser(user,userRepository);

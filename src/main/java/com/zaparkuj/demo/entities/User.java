@@ -11,13 +11,13 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @Column(name = "id_user")
+    @Column(name = "idusers")
     @GeneratedValue(strategy = GenerationType.AUTO)
     long idUser;
 
     String username;
-    String password;
-    String name;
-    String lastname;
     String email;
+    String password_2;
+    String firstname;
+    String lastname;
 }
