@@ -10,7 +10,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<String> insertUser(User user, UserRepository userRepository) {
-//        System.out.println(user.getUsername());
+//        System.out.println(user);
 //        System.out.println(userRepository.toString());
         //TODO dodac sprawdzenie hasła, zrobic deklaracje userRespository w serviceimpl
         if (userRepository.findByUsername(user.getUsername()).isEmpty()) {

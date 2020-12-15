@@ -12,8 +12,8 @@ public class User {
 
     @Id
     @Column(name = "idusers")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long idUser;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idUser;
 
     String username;
     String email;
