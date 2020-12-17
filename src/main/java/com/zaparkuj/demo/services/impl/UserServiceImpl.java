@@ -1,26 +1,38 @@
 package com.zaparkuj.demo.services.impl;
 
+import com.zaparkuj.demo.dto.UserRequest;
 import com.zaparkuj.demo.entities.User;
 import com.zaparkuj.demo.repositories.UserRepository;
 import com.zaparkuj.demo.services.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
+    UserRepository userRepository;
+
     @Override
-    public ResponseEntity<String> insertUser(User user, UserRepository userRepository) {
-//        System.out.println(user.getUsername());
-//        System.out.println(userRepository.toString());
-        //TODO dodac sprawdzenie hasła, zrobic deklaracje userRespository w serviceimpl
+    public boolean insertUser(User user) {
+        //TODO dodac sprawdzenie hasła
         if (userRepository.findByUsername(user.getUsername()).isEmpty()) {
             user.setUsername(user.getUsername());
-            user.setPassword_2(user.getPassword_2());
+            user.setPassword(user.getPassword());
             user.setEmail(user.getEmail());
             userRepository.save(user);
-            return new ResponseEntity<>("inserted",HttpStatus.ACCEPTED);
+            return true;
         }else{
-            return new ResponseEntity<>("user with this username exist",HttpStatus.CONFLICT);
+            return false; // TODO zamienic na enum'a
+        }
+    }
+
+    @Override
+    public boolean loginUser(UserRequest userRequest) {
+        if (userRepository.findUserByPasswordAndEmail(userRequest.getPassword(), userRequest.getEmail())==null){
+            return false;
+        }else {
+            return true;
         }
     }
 }
