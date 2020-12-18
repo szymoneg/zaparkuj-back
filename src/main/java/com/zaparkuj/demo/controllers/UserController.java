@@ -16,6 +16,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 @RestController
 @CrossOrigin
 public class UserController {
@@ -29,30 +32,17 @@ public class UserController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-//    @CrossOrigin
-//    @PostMapping("/register")
-//    public ResponseEntity<String> insertUserController(@RequestBody User user){
-//        if (userService.insertUser(user)){
-//            return new ResponseEntity<>("Dodano!",HttpStatus.OK);
-//        }else {
-//            return new ResponseEntity<>("Nie dodano", HttpStatus.FORBIDDEN);
-//        }
-//    }
-//
-//    @CrossOrigin
-//    @PostMapping("/login")
-//    public Boolean loginUserController(@RequestBody UserDTO userDTO){
-//        return userService.loginUser(userDTO);
-//    }
-
-
     @GetMapping("/hello")
-    @CrossOrigin
     public String hello(){
         return "Hello world";
     }
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    @GetMapping("parkings")
+    public String parkingList(){
+        return "not implemented yet!";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
         authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
