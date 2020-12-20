@@ -1,6 +1,7 @@
 package com.zaparkuj.demo.services.impl;
 
 import com.zaparkuj.demo.dto.EditUserRequest;
+import com.zaparkuj.demo.dto.EditUserResponse;
 import com.zaparkuj.demo.dto.UserDTO;
 import com.zaparkuj.demo.entities.User;
 import com.zaparkuj.demo.repositories.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.management.Query;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -39,11 +41,29 @@ public class UserServiceImpl implements UserService, UserDetailsService {
          User newUser = new User();
          newUser.setEmail(user.getEmail());
          newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+         newUser.setLastname("");
+         newUser.setFirstname("");
          return userRepository.save(newUser);
     }
 
     @Override
-    public Optional<User> editUser(Long id, EditUserRequest editUserRequest) {
-        return Optional.empty();
+    public void editUser(String email, EditUserRequest editUserRequest) {
+        User userToUpdate = userRepository.findByEmail(email);
+        userToUpdate.setEmail(editUserRequest.getEmail());
+        userToUpdate.setFirstname(editUserRequest.getFirstname());
+        userToUpdate.setLastname(editUserRequest.getLastname());
+        if (!(editUserRequest.getOldPassword()==null)) {
+            if (passwordEncoder.encode(editUserRequest.getOldPassword()).equals(passwordEncoder.encode(userToUpdate.getPassword()))) {
+                userToUpdate.setPassword(passwordEncoder.encode(editUserRequest.getPassword()));
+            }
+        }
+        userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public User getDataUser(String email) {
+        //TODO zrobic zeby zwracało EditUserResponse
+        System.out.println(userRepository.findByEmail(email).getEmail());
+        return userRepository.findByEmail(email);
     }
 }

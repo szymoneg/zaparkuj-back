@@ -1,6 +1,8 @@
 package com.zaparkuj.demo.controllers;
 
+import com.zaparkuj.demo.entities.Car;
 import com.zaparkuj.demo.entities.Parking;
+import com.zaparkuj.demo.entities.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
