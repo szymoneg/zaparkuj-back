@@ -1,5 +1,6 @@
 package com.zaparkuj.demo.services.impl;
 
+import com.zaparkuj.demo.dto.EditUserRequest;
 import com.zaparkuj.demo.dto.UserDTO;
 import com.zaparkuj.demo.entities.User;
 import com.zaparkuj.demo.repositories.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service("userDetailsService")
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -38,5 +40,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
          newUser.setEmail(user.getEmail());
          newUser.setPassword(passwordEncoder.encode(user.getPassword()));
          return userRepository.save(newUser);
+    }
+
+    @Override
+    public Optional<User> editUser(Long id, EditUserRequest editUserRequest) {
+        return Optional.empty();
     }
 }
