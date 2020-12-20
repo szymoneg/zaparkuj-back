@@ -1,10 +1,8 @@
 package com.zaparkuj.demo.controllers;
 
 import com.zaparkuj.demo.entities.Parking;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.zaparkuj.demo.services.ParkingService;
+import com.zaparkuj.demo.services.impl.ParkingServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,32 +13,24 @@ import java.util.ArrayList;
 @CrossOrigin
 public class ParkingController {
 
-    @Autowired
-    SessionFactory factory = new Configuration()
-            .configure("hibernate.cfg.xml")
-            .addAnnotatedClass(Parking.class)
-            .buildSessionFactory();
+    ParkingService parkingService = new ParkingServiceImpl();
 
+    /* ---- Funkcja zwracająca parking o podanym id ---- */
     @CrossOrigin
-    @GetMapping("/parking")
-    public ResponseEntity<ArrayList<Parking>> selectAllParkingController() {
+    @GetMapping("/parking/{id}")
+    public ResponseEntity<Parking> selectParkingController(@PathVariable("id") int id) {
 
-        System.out.println("Dziala");
+        Parking parking = parkingService.selectParking(id);
 
-        ArrayList<Parking> parkings = new ArrayList<>();
+        return new ResponseEntity<>(parking, HttpStatus.OK);
+    }
 
-        Session session = factory.openSession();
-        session.beginTransaction();
+    /* ---- Funkcja zwracjąca wszystkie dostępne parkingi z bazy danych ---- */
+    @CrossOrigin
+    @GetMapping("/parkings")
+    public ResponseEntity<ArrayList<Parking>> selectAllParkingsController() {
 
-        Parking parking = session.get(Parking.class, 1);
-
-        parkings.add(parking);
-
-        session.getTransaction(). commit();
-
-        System.out.println(parkings);
-
-        session.close();
+        ArrayList<Parking> parkings = parkingService.selectAllParkings();
 
         return new ResponseEntity<>(parkings, HttpStatus.OK);
     }

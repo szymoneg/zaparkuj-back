@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "car")
+@Table(name = "car", schema = "parkit")
 @Setter
 @Getter
 @ToString

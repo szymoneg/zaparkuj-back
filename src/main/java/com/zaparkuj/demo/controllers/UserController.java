@@ -37,10 +37,10 @@ public class UserController {
         return "Hello world";
     }
 
-    @GetMapping("parkings")
-    public String parkingList(){
-        return "not implemented yet!";
-    }
+//    @GetMapping("parkings")
+//    public String parkingList(){
+//        return "not implemented yet!";
+//    }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
