@@ -39,29 +39,4 @@ public class UserServiceImpl implements UserService, UserDetailsService {
          newUser.setPassword(passwordEncoder.encode(user.getPassword()));
          return userRepository.save(newUser);
     }
-
-
-//
-//    @Override
-//    public boolean insertUser(User user) {
-//        //TODO dodac sprawdzenie hasła
-//        if (userRepository.findByUsername(user.getUsername()).isEmpty()) {
-//            user.setUsername(user.getUsername());
-//            user.setPassword(user.getPassword());
-//            user.setEmail(user.getEmail());
-//            userRepository.save(user);
-//            return true;
-//        }else{
-//            return false; // TODO zamienic na enum'a
-//        }
-//    }
-//
-//    @Override
-//    public boolean loginUser(UserDTO userDTO) {
-//        if (userRepository.findUserByPasswordAndEmail(userDTO.getPassword(), userDTO.getEmail())==null){
-//            return false;
-//        }else {
-//            return true;
-//        }
-//    }
 }

@@ -17,8 +17,8 @@ public class Car {
 
     @Id
     @Column(name = "idcar")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int idCar;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idCar;
 
     @Column(name = "mark")
     private String mark;
