@@ -15,6 +15,7 @@ import java.util.ArrayList;
 @Service
 public class ParkingServiceImpl implements ParkingService {
 
+    @Autowired
     private SessionFactory factory;
 
     public ParkingServiceImpl() {

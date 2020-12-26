@@ -1,6 +1,5 @@
 package com.zaparkuj.demo.services.impl;
 
-import com.zaparkuj.demo.dto.PlaceDTO;
 import com.zaparkuj.demo.entities.Parking;
 import com.zaparkuj.demo.entities.Place;
 import com.zaparkuj.demo.services.PlaceService;
@@ -10,15 +9,13 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.InitBinder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class PlaceServiceImpl implements PlaceService {
 
+    @Autowired
     public SessionFactory factory;
 
     public PlaceServiceImpl() {
@@ -36,14 +33,26 @@ public class PlaceServiceImpl implements PlaceService {
         session.beginTransaction();
 
         Query query = session.createQuery("FROM Place WHERE parking.idparking=" + id);  // pobranie wszystkich miejsc parkingowych o danym id
-        System.out.println(query.getResultList());
-        System.out.println(id);
         ArrayList<Place> places = (ArrayList<Place>) query.getResultList();
-        System.out.println(places);
 
         session.getTransaction().commit();
         session.close();
 
         return places;
+    }
+
+    @Override
+    public long selectCountPlaces(int id, boolean status) {
+
+        Session session = factory.openSession();
+        session.beginTransaction();
+
+        Query query = session.createQuery("SELECT count(idPlace) FROM Place WHERE parking.idparking=" + id + " AND status=" + status);
+        System.out.println(query.getResultList().get(0));
+        Long countPlaces = (Long) query.getResultList().get(0);
+
+        session.close();
+
+        return countPlaces;
     }
 }
