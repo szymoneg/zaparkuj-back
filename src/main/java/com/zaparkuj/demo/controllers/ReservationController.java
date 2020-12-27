@@ -6,6 +6,7 @@ import com.zaparkuj.demo.services.impl.ReservationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,4 +85,14 @@ public class ReservationController {
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 
+    /* ---- Funkcja wykonuje się na starcie i co określony czas sprawdza aktywne rezerwacje,
+            które powinny się skończyć i zmienia ich status ---- */
+    @Scheduled(fixedRate = 300000)
+    public void checkReservations() {
+
+        ArrayList<Reservation> reservations = reservationService.getAllActiveReservations();
+
+        for(Reservation reservation : reservations)
+            reservationService.desactiveReservation(reservation);
+    }
 }
