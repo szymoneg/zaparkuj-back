@@ -17,18 +17,4 @@ import java.util.ArrayList;
 @Service
 public class CarServiceImpl {
 
-//    @Autowired
-//    UserRepository userRepository;
-//
-//    @Override
-//    public ResponseEntity<String> insertCar(Car car, CarRepository carRepository, String name) {
-//        ArrayList<User> user = userRepository.findByUsername(name);
-//        car.setHolderCar(user.get(0));
-//        if(carRepository.findByLicencePlate(car.getLicencePlate()).isEmpty()) {
-//            carRepository.save(car);
-//            return new ResponseEntity<>("inserted", HttpStatus.ACCEPTED);
-//        } else {
-//            return new ResponseEntity<>("car with this Licence Plate exist", HttpStatus.CONFLICT);
-//        }
-//    }
 }
