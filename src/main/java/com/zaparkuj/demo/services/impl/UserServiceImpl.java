@@ -89,6 +89,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             query.setParameter("email", email);
             user = (User) query.getSingleResult();
         }
+        catch (NoResultException exc) {
+            return null;
+        }
         catch (Exception exc) {
             exc.printStackTrace();
         }

@@ -55,7 +55,10 @@ public class UserController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
-        return ResponseEntity.ok(userService.save(user));
+        if(userService.findUserByEmail(user.getEmail()) == null)
+            return ResponseEntity.ok(userService.save(user));
+        else
+            return new ResponseEntity<>(new MessageDTO("email exist"), HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/user/changedata", method = RequestMethod.POST)

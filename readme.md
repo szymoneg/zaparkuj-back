@@ -1,5 +1,12 @@
+### Swagger API
+```
+http://localhost:8080/swagger-ui.html#/
+```
 # User Service
 ### Rejestracja użytkownia - method - POST
+możliwe odpowiedzi od servera:  
+HttpStatus.OK : JSON z danymi użytkownika  
+HttpStatus.BAD_REQUEST: "email exist"
 ```
 127.0.0.1:8080/register
 ```
@@ -11,6 +18,9 @@
 ```
 
 ### Logowanie użytkownika - method - POST
+możliwe odpowiedzi od servera:  
+HttpStatus.OK : JSON z jwttoken  
+HttpStatus.BAD_REQUEST:
 ```
 127.0.0.1:8080/login
 ```
