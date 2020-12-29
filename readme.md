@@ -22,8 +22,8 @@
 ```
 
 ### Uaktualnienie danych na podstawie adresu email - method - POST
-możliwe odpowiedzi od servera:
-HttpStatus.OK : true
+możliwe odpowiedzi od servera:  
+HttpStatus.OK : true  
 HttpStatus.BAD_REQUEST: "Incorrect data", "Username exist", "Something is wrong"
 ```
 127.0.0.1:8080/user/changedata
@@ -42,7 +42,7 @@ HttpStatus.BAD_REQUEST: "Incorrect data", "Username exist", "Something is wrong"
 ### Pobranie wszystkich pojazdów użytkownika - method - GET
 ```
 127.0.0.1:8080/cars/{username}
-127.0.0.1:8080/cars/{username}
+127.0.0.1:8080/cars/kornel
 ```
 
 # Parking Service
@@ -57,11 +57,6 @@ HttpStatus.BAD_REQUEST: "Incorrect data", "Username exist", "Something is wrong"
 127.0.0.1:8080/parking/1
 ```
 
-### Pobranie koordynatów parkingu o podanym id - method - GET
-```
-127.0.0.1:8080/parking/coords/{id}
-127.0.0.1:8080/parking/coords/1
-```
 ### Pobranie wszystkich parkingów w danym mieście - method - GET
 ```
 127.0.0.1:8080/parkings/city/{city}

@@ -38,17 +38,6 @@ public class ParkingController {
         return new ResponseEntity<>(parkings, HttpStatus.OK);
     }
 
-    /* ---- Funkcja zwracająca koordynaty parkingu o podanym id ---- */
-    @CrossOrigin
-    @GetMapping("/parking/coords/{id}")
-    public ResponseEntity<CoordsDTO> selectCoordsParking(@PathVariable("id") int id) {
-
-        Parking parking = parkingService.selectParking(id);
-        CoordsDTO coords = new CoordsDTO(parking.getCord());
-
-        return new ResponseEntity<>(coords, HttpStatus.OK);
-    }
-
     /* ---- Funkcja zwracająca listę parkingów w danym mieście ---- */
     @CrossOrigin
     @GetMapping("/parkings/city/{city}")
@@ -58,9 +47,9 @@ public class ParkingController {
         int lastSpace;
 
         for(int i = 0; i < parkings.size(); i++) {
-            lastSpace = parkings.get(i).getAdress().lastIndexOf(' ');
-            System.out.println(parkings.get(i).getAdress().substring(lastSpace + 1));
-            if(!parkings.get(i).getAdress().substring(lastSpace + 1).equals(city)) {
+            lastSpace = parkings.get(i).getAddress().lastIndexOf(' ');
+            System.out.println(parkings.get(i).getAddress().substring(lastSpace + 1));
+            if(!parkings.get(i).getAddress().substring(lastSpace + 1).equals(city)) {
                 parkings.remove(i);
                 i--;
             }
