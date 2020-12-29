@@ -43,15 +43,15 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
-        authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
         final UserDetails userDetails = userService
-                .loadUserByUsername(authenticationRequest.getEmail());
+                .loadUserByUsername(authenticationRequest.getUsername());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
-        String email = authenticationRequest.getEmail();
+        String username = authenticationRequest.getUsername();
 
-        return ResponseEntity.ok(new JwtResponse(token,email));
+        return ResponseEntity.ok(new JwtResponse(token,username));
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
