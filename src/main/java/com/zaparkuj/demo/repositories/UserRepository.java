@@ -10,6 +10,6 @@ import java.util.ArrayList;
 
 @Repository
 public interface UserRepository extends CrudRepository<User,Long> {
-    User findByEmail(String email);
+    User findByUsername(String username);
     User findUserByPasswordAndEmail(String email, String username);
 }
