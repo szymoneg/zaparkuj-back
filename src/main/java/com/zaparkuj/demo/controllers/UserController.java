@@ -1,8 +1,6 @@
 package com.zaparkuj.demo.controllers;
 import com.zaparkuj.demo.config.JwtTokenUtil;
-import com.zaparkuj.demo.dto.JwtRequest;
-import com.zaparkuj.demo.dto.JwtResponse;
-import com.zaparkuj.demo.dto.UserDTO;
+import com.zaparkuj.demo.dto.*;
 import com.zaparkuj.demo.entities.User;
 import com.zaparkuj.demo.services.UserService;
 import com.zaparkuj.demo.services.impl.UserServiceImpl;
@@ -58,6 +56,37 @@ public class UserController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
         return ResponseEntity.ok(userService.save(user));
+    }
+
+    @RequestMapping(value = "/user/changedata", method = RequestMethod.POST)
+    public ResponseEntity<?> updateUserData(@RequestBody UserDataDTO userData) {
+
+        // sprawdzenie poprawności danych
+        if(userData.getUsername().equals("") || userData.getFirstname().equals("") || userData.getLastname().equals("") ||
+                userData.getUsername().length() > 45 || userData.getFirstname().length() > 45 || userData.getLastname().length() > 45) {
+            return new ResponseEntity<>(new MessageDTO("Incorrect data"), HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.findUserByEmail(userData.getEmail());
+
+        if (user.getUsername() == null || user.getUsername().equals(userData.getUsername())) {
+
+            // sprawdzenie czy taki username istnieje
+            User tempUser = userService.findUserByUsername(userData.getUsername());
+            if(tempUser != null) {
+                if(tempUser.getIdUser() != user.getIdUser())
+                    return new ResponseEntity<>(new MessageDTO("Username exist"), HttpStatus.BAD_REQUEST);
+            }
+
+            user.setUsername(userData.getUsername());
+            user.setFirstname(userData.getFirstname());
+            user.setLastname(userData.getLastname());
+
+            return new ResponseEntity<>(userService.saveFullDataUser(user), HttpStatus.OK);
+        }
+
+
+        return new ResponseEntity<>(new MessageDTO("Something is wrong"), HttpStatus.BAD_REQUEST);
     }
 
     private void authenticate(String username, String password) throws Exception {

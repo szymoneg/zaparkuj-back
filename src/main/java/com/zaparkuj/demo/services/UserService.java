@@ -11,4 +11,12 @@ public interface UserService {
     UserDetails loadUserByUsername(String s);
 
     User save(UserDTO user);
+
+    public boolean saveFullDataUser(User user);
+
+    /* ---- Funkcja zwraca obiekt użytkownika szukanego po adresie email ---- */
+    public User findUserByEmail(String email);
+    /* ---- Funkcja zwraca obiekt użytkownika szukanego po username ---- */
+    public User findUserByUsername(String username);
+
 }

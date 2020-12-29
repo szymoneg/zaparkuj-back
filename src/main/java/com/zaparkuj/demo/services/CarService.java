@@ -5,7 +5,11 @@ import com.zaparkuj.demo.repositories.CarRepository;
 import com.zaparkuj.demo.repositories.UserRepository;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+
 public interface CarService {
 
-    ResponseEntity<String> insertCar(Car car, CarRepository carRepository, String name);
+    /* ---- Funkcja wybiera wszystkie samochody użytkownika o danym username ---- */
+    ArrayList<Car> selectCarsUser(String user);
+
 }

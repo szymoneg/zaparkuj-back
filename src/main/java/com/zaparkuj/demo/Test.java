@@ -19,5 +19,7 @@ public class Test {
         long miliseconds = timeStamp.getTime();
         System.out.println(miliseconds);
 
+
+        System.out.println("".isEmpty());
     }
 }
