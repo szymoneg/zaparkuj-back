@@ -51,7 +51,7 @@ public class UserController {
         final String token = jwtTokenUtil.generateToken(userDetails);
         String email = authenticationRequest.getEmail();
 
-        return ResponseEntity.ok(new JwtResponse(email,token));
+        return ResponseEntity.ok(new JwtResponse(token,email));
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
