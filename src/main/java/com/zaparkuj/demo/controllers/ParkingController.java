@@ -1,6 +1,5 @@
 package com.zaparkuj.demo.controllers;
 
-import com.zaparkuj.demo.dto.CoordsDTO;
 import com.zaparkuj.demo.entities.Parking;
 import com.zaparkuj.demo.services.ParkingService;
 import com.zaparkuj.demo.services.impl.ParkingServiceImpl;

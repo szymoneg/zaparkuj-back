@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/places/countPlaces/{id}/{status}", "/parkings/city/{city}",
                         "/reservations", "/reservation/{id}", "/reservation/user/{username}", "/reservation/active/{username}",
                         "/user/changedata",
-                        "/cars/{username}"
+                        "/cars/{username}", "/addcar/{username}"
                         )
                 .permitAll()
                 .anyRequest().authenticated()

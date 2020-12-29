@@ -39,4 +39,20 @@ public class CarServiceImpl implements CarService{
 
         return cars;
     }
+
+    @Override
+    public void insertCar(User user, String mark, String model, String licencePlate) {
+        Session session = factory.openSession();
+
+        try {
+            Car car = new Car(mark, model, licencePlate, user);
+
+            session.beginTransaction();
+            session.save(car);
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+    }
 }
