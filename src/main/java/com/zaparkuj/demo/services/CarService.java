@@ -15,4 +15,13 @@ public interface CarService {
 
     /* ---- Funkcja dodająca samochód do podanego użytkownika ---- */
     void insertCar(User user, String mark, String model, String licencePlate);
+
+    /* ---- Funkcja znajdująca samochód po podanym licencePlate ---- */
+    public Car selectCarOfLicencePlate(String licencePlate);
+
+    /* ---- Funkcja znajdująca samochód o danym id ---- */
+    public Car selectCarOfId(int id);
+
+    /* ---- Funkcja usuwająca samochód ---- */
+    public boolean deleteCar(Car car);
 }

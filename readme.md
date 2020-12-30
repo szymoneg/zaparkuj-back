@@ -6,7 +6,7 @@ http://localhost:8080/swagger-ui.html#/
 ### Rejestracja użytkownia - method - POST
 możliwe odpowiedzi od servera:  
 HttpStatus.OK : JSON z danymi użytkownika  
-HttpStatus.BAD_REQUEST: "email exist"
+HttpStatus.BAD_REQUEST : "email exist"
 ```
 127.0.0.1:8080/register
 ```
@@ -20,7 +20,7 @@ HttpStatus.BAD_REQUEST: "email exist"
 ### Logowanie użytkownika - method - POST
 możliwe odpowiedzi od servera:  
 HttpStatus.OK : JSON z jwttoken  
-HttpStatus.BAD_REQUEST:
+HttpStatus.BAD_REQUEST :
 ```
 127.0.0.1:8080/login
 ```
@@ -34,7 +34,7 @@ HttpStatus.BAD_REQUEST:
 ### Uaktualnienie danych na podstawie adresu email - method - POST
 możliwe odpowiedzi od servera:  
 HttpStatus.OK : true  
-HttpStatus.BAD_REQUEST: "Incorrect data", "Username exist", "Something is wrong"
+HttpStatus.BAD_REQUEST : "Incorrect data", "Username exist", "Something is wrong"
 ```
 127.0.0.1:8080/user/changedata
 ```
@@ -53,6 +53,32 @@ HttpStatus.BAD_REQUEST: "Incorrect data", "Username exist", "Something is wrong"
 ```
 127.0.0.1:8080/cars/{username}
 127.0.0.1:8080/cars/kornel
+```
+
+### Dodanie nowego auto do użytkownia - method - POST
+możliwe odpowiedzi od servera:  
+HttpStatus.OK : true  
+HttpStatus.BAD_REQUEST : "licence plate exist", "bad car mark", "bad car model", "bad licence plate"
+```
+127.0.0.1:8080/addcar/{username}
+127.0.0.1:8080/addcar/kornel
+```
+```JSON
+{
+    "mark": "Audi",
+    "model": "RS5",
+    "licencePlate": "KBR 0000"
+}
+```
+
+### Usunięcię pojazdu o danym id - method - DELETE
+możliwe odpowiedzi od servera:  
+HttpStatus.OK : true  
+HttpStatus.NOT_FOUND : false  
+HttpStatus.NOT_ACCEPTABLE : false
+```
+127.0.0.1:8080/deletecar/{id}
+127.0.0.1:8080/deletecar/1
 ```
 
 # Parking Service
