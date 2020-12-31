@@ -161,7 +161,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public boolean checkPlaceToReservation(int idPlace, Date beginDate, Date endDate) {
 
-        ArrayList<Reservation> reservations = getAllReservations();
+        ArrayList<Reservation> reservations = getAllActiveReservations();
         Date beginReservation;
         Date endReservation;
 
