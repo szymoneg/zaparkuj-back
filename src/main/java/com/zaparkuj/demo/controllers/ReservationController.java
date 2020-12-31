@@ -1,18 +1,32 @@
 package com.zaparkuj.demo.controllers;
 
+import com.zaparkuj.demo.dto.MessageDTO;
+import com.zaparkuj.demo.dto.Request.ReservationRequest;
+import com.zaparkuj.demo.dto.Response.ReservationResponse;
+import com.zaparkuj.demo.entities.Car;
+import com.zaparkuj.demo.entities.Place;
 import com.zaparkuj.demo.entities.Reservation;
+import com.zaparkuj.demo.entities.User;
+import com.zaparkuj.demo.services.CarService;
+import com.zaparkuj.demo.services.PlaceService;
 import com.zaparkuj.demo.services.ReservationService;
+import com.zaparkuj.demo.services.UserService;
+import com.zaparkuj.demo.services.impl.CarServiceImpl;
+import com.zaparkuj.demo.services.impl.PlaceServiceImpl;
 import com.zaparkuj.demo.services.impl.ReservationServiceImpl;
+import com.zaparkuj.demo.services.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ValidationException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 @RestController
 @CrossOrigin
@@ -21,68 +35,127 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService = new ReservationServiceImpl();
 
+    @Autowired
+    private UserService userService = new UserServiceImpl();
+
+    @Autowired
+    private CarService carService = new CarServiceImpl();
+
+    @Autowired
+    private PlaceService placeService = new PlaceServiceImpl();
+
     /* ---- Funkcja zwracająca wszystkie rezerwacje ---- */
     @CrossOrigin
     @GetMapping("/reservations")
-    public ResponseEntity<ArrayList<Reservation>> selectAllReservations() {
+    public ResponseEntity<ArrayList<ReservationResponse>> selectAllReservations() {
 
         ArrayList<Reservation> reservations = reservationService.getAllReservations();
+        ArrayList<ReservationResponse> reservationResponses = new ArrayList<>();
 
-        return new ResponseEntity<>(reservations, HttpStatus.OK);
+        for(Reservation reservation : reservations) {
+            reservationResponses.add(new ReservationResponse(reservation.getIdReservation(),
+                    reservation.getPlace().getIdPlace(), reservation.getCar().getIdCar(),
+                    reservation.getDateBegin(), reservation.getDateBegin(), reservation.isStatusReservation()));
+        }
+
+        return new ResponseEntity<>(reservationResponses, HttpStatus.OK);
     }
 
     /* ---- Funkcja zwracająca dane rezerwacji o podanym id ---- */
     @CrossOrigin
-    @GetMapping("/reservation/{id}")
-    public ResponseEntity<Reservation> selectReservation(@PathVariable("id") int id) {
+    @GetMapping("/reservation/id/{id}")
+    public ResponseEntity<ReservationResponse> selectReservation(@PathVariable("id") int id) {
 
         Reservation reservation = reservationService.getReservation(id);
+        ReservationResponse reservationResponse = new ReservationResponse( reservation.getIdReservation(),
+                reservation.getPlace().getIdPlace(), reservation.getCar().getIdCar(),
+                reservation.getDateBegin(), reservation.getDateEnd(), reservation.isStatusReservation());
 
-        return new ResponseEntity<>(reservation, HttpStatus.OK);
+        return new ResponseEntity<>(reservationResponse, HttpStatus.OK);
     }
 
     /* ---- Funkcja zwracająca wszystkie dane rezerwacji użytkownika o podanej nazwie username ---- */
     @CrossOrigin
     @GetMapping("/reservation/user/{username}")
-    public ResponseEntity<ArrayList<Reservation>> selectReservationOfUsername(@PathVariable("username") String username) {
+    public ResponseEntity<ArrayList<ReservationResponse>> selectReservationOfUsername(@PathVariable("username") String username) {
 
         ArrayList<Reservation> reservations = reservationService.getAllReservations();
+        ArrayList<ReservationResponse> reservationResponses = new ArrayList<>();
 
         for(int i = 0; i < reservations.size(); i++) {
             if(!reservations.get(i).getCar().getHolderCar().getUsername().equals(username)) {
                 reservations.remove(i);
                 i--;
             }
+            else {
+                reservationResponses.add(new ReservationResponse(reservations.get(i).getIdReservation(),
+                        reservations.get(i).getPlace().getIdPlace(), reservations.get(i).getCar().getIdCar(),
+                        reservations.get(i).getDateBegin(), reservations.get(i).getDateBegin(),
+                        reservations.get(i).isStatusReservation()));
+            }
         }
 
-        return new ResponseEntity<>(reservations, HttpStatus.OK);
+        return new ResponseEntity<>(reservationResponses, HttpStatus.OK);
     }
 
     /* ---- Funkcja zwracająca wszystkie aktywne dane rezerwacji użytkownika o podanej nazwie username ---- */
     @CrossOrigin
-    @GetMapping("/reservation/active/{username}")
-    public ResponseEntity<ArrayList<Reservation>> selectReservationTimeOfUsername(@PathVariable("username") String username) {
+    @GetMapping("/reservation/status/{status}/{username}")
+    public ResponseEntity<ArrayList<ReservationResponse>> selectReservationTimeOfUsername(
+            @PathVariable("status") boolean status,
+            @PathVariable("username") String username) {
 
-        ArrayList<Reservation> reservations = reservationService.getAllReservations();
-        long systemTime = System.currentTimeMillis();                                           // czas systemowy w milisekundach
+        ArrayList<ReservationResponse> reservationResponses = new ArrayList<>();
+        User user = userService.findUserByUsername(username);
+        ArrayList<Reservation> reservations = reservationService.getUserReservation(user.getIdUser(), status);
 
-        for(int i = 0; i < reservations.size(); i++) {
-            if(!reservations.get(i).getCar().getHolderCar().getUsername().equals(username)) {
-                reservations.remove(i);
-                i--;
-                continue;
+        for(Reservation reservation : reservations) {
+            reservationResponses.add(new ReservationResponse(reservation.getIdReservation(),
+                    reservation.getPlace().getIdPlace(), reservation.getCar().getIdCar(),
+                    reservation.getDateBegin(), reservation.getDateEnd(), reservation.isStatusReservation()));
+        }
+        
+        return new ResponseEntity<>(reservationResponses, HttpStatus.OK);
+    }
+
+    /* ---- Funkcja dodająca rezerwacje na podstawie przesłanego JSONA ---- */
+    @CrossOrigin
+    @RequestMapping(value = "/reservation/add", method = RequestMethod.POST)
+    public ResponseEntity<?> addUserReservation(@RequestBody ReservationRequest reservationRequest) {
+
+        try {
+            Car car = carService.selectCarOfId(reservationRequest.getIdCar());
+            Place place = placeService.selectPlace(reservationRequest.getIdPlace());
+            if(car == null || place == null) {
+                return new ResponseEntity<>(new MessageDTO("not found data"), HttpStatus.BAD_REQUEST);
             }
 
-            long dateBeginAsMilis = reservations.get(i).getDateBegin().getTime();               // start rezerwacji
-            long dateEndAsMilis = reservations.get(i).getDateEnd().getTime();                   // koniec rezerwacji
+            Date dateBegin = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+                    .parse(reservationRequest.getDateBegin());
+            Date dateEnd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+                    .parse(reservationRequest.getDateEnd());
 
-            if(!(systemTime > dateBeginAsMilis && systemTime < dateEndAsMilis)) {
-                reservations.remove(i);
-                i--;
-            }
+            if(dateBegin.getTime() > dateEnd.getTime())
+                return new ResponseEntity<>(new MessageDTO("bad date begin and end reservation"), HttpStatus.BAD_REQUEST);
+            if(dateBegin.getTime() == dateEnd.getTime())
+                return new ResponseEntity<>(new MessageDTO("date begin and end reservation are the same"), HttpStatus.BAD_REQUEST);
+
+            boolean checkTime = reservationService.checkPlaceToReservation(reservationRequest.getIdPlace(), dateBegin, dateEnd);
+            if(!checkTime)
+                return new ResponseEntity<>(new MessageDTO("bad time reservation"), HttpStatus.BAD_REQUEST);
+
+            Reservation reservation = new Reservation(dateBegin, dateEnd, true, car, place);
+
+            reservationService.insertReservation(reservation);
+        }
+        catch (ValidationException exception) {
+            return new ResponseEntity<>(new MessageDTO(exception), HttpStatus.BAD_REQUEST);
+        }
+        catch (ParseException exception) {
+            return new ResponseEntity<>(new MessageDTO("bad data format"), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(reservations, HttpStatus.OK);
+        return new ResponseEntity<>(new MessageDTO("created"), HttpStatus.CREATED);
     }
 
     /* ---- Funkcja wykonuje się na starcie i co określony czas sprawdza aktywne rezerwacje,

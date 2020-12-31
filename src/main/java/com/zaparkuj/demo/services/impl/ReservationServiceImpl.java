@@ -37,13 +37,18 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation getReservation(int id) {
 
+        Reservation reservation;
         Session session = factory.openSession();
-        session.beginTransaction();
 
-        Query query = session.createQuery("FROM Reservation WHERE idReservation=" + id);
-        Reservation reservation = (Reservation) query.getResultList().get(0);
+        try {
+            session.beginTransaction();
 
-        session.close();
+            Query query = session.createQuery("FROM Reservation WHERE idReservation=" + id);
+            reservation = (Reservation) query.getResultList().get(0);
+        }
+        finally {
+            session.close();
+        }
 
         return reservation;
     }
@@ -51,13 +56,18 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ArrayList<Reservation> getAllReservations() {
 
+        ArrayList<Reservation> reservations;
         Session session = factory.openSession();
-        session.beginTransaction();
 
-        Query query = session.createQuery("FROM Reservation");
-        ArrayList<Reservation> reservations = (ArrayList<Reservation>) query.getResultList();
+        try {
+            session.beginTransaction();
 
-        session.close();
+            Query query = session.createQuery("FROM Reservation");
+            reservations = (ArrayList<Reservation>) query.getResultList();
+        }
+        finally {
+            session.close();
+        }
 
         return reservations;
     }
@@ -65,18 +75,46 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ArrayList<Reservation> getAllActiveReservations() {
 
+        ArrayList<Reservation> reservations;
         Date dt = new Date();
         Timestamp tstamp = new Timestamp(dt.getTime());
 
         Session session = factory.openSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        String hql = "FROM Reservation r WHERE dateEnd < :nowDate AND statusReservation=true";
-        Query query = session.createQuery(hql);
-        query.setParameter("nowDate", tstamp);
-        ArrayList<Reservation> reservations = (ArrayList<Reservation>) query.getResultList();
+            String hql = "FROM Reservation r WHERE dateEnd < :nowDate AND statusReservation=true";
+            Query query = session.createQuery(hql);
+            query.setParameter("nowDate", tstamp);
+            reservations = (ArrayList<Reservation>) query.getResultList();
+        }
+        finally {
+            session.close();
+        }
 
-        session.close();
+        return reservations;
+    }
+
+    @Override
+    public ArrayList<Reservation> getUserReservation(int idUser, boolean status) {
+
+        ArrayList<Reservation> reservations = new ArrayList<>();
+        Date dt = new Date();
+        Timestamp tstamp = new Timestamp(dt.getTime());
+
+        Session session = factory.openSession();
+        try {
+            session.beginTransaction();
+            String str = "FROM Reservation WHERE statusReservation=:status AND car.holderCar.idUser=:id";
+
+            Query query = session.createQuery(str);
+            query.setParameter("status", status);
+            query.setParameter("id", idUser);
+            reservations = (ArrayList<Reservation>) query.getResultList();
+        }
+        finally {
+            session.close();
+        }
 
         return reservations;
     }
@@ -85,14 +123,61 @@ public class ReservationServiceImpl implements ReservationService {
     public void desactiveReservation(Reservation reservation) {
 
         Session session = factory.openSession();
-        Transaction transaction = session.beginTransaction();
 
-        reservation.getPlace().setStatus(true);
-        reservation.setStatusReservation(false);
+        try {
+            Transaction transaction = session.beginTransaction();
 
-        session.update(reservation);
-        session.getTransaction();
-        transaction.commit();
-        session.close();
+            reservation.getPlace().setStatus(true);
+            reservation.setStatusReservation(false);
+
+            session.update(reservation);
+            session.getTransaction();
+            transaction.commit();
+        }
+        finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public boolean insertReservation(Reservation reservation) {
+
+        Session session = factory.openSession();
+        try {
+            session.beginTransaction();
+            session.save(reservation);
+            session.getTransaction().commit();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        finally {
+            session.close();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean checkPlaceToReservation(int idPlace, Date beginDate, Date endDate) {
+
+        ArrayList<Reservation> reservations = getAllReservations();
+        Date beginReservation;
+        Date endReservation;
+
+        for(Reservation reservation : reservations) {
+            if(reservation.getPlace().getIdPlace() != idPlace) {
+                continue;
+            }
+            beginReservation = reservation.getDateBegin();
+            endReservation = reservation.getDateEnd();
+            if((beginDate.getTime() >= beginReservation.getTime() && beginDate.getTime() <= endReservation.getTime()) ||
+                endDate.getTime() >= beginReservation.getTime() && endDate.getTime() <= endReservation.getTime() ||
+                    (beginDate.getTime() < beginReservation.getTime() && beginDate.getTime() < endReservation.getTime() &&
+                    endDate.getTime() > beginReservation.getTime() && endDate.getTime() > endReservation.getTime())) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -10,12 +10,14 @@ import lombok.ToString;
 @ToString
 public class PlaceDTO {
 
+    private int idPlace;
     private String placeName;
     private boolean status;
 
     public PlaceDTO() { }
 
-    public PlaceDTO(String placeName, boolean status) {
+    public PlaceDTO(int idPlace, String placeName, boolean status) {
+        this.idPlace = idPlace;
         this.placeName = placeName;
         this.status = status;
     }

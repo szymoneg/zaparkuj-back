@@ -28,13 +28,17 @@ public class ParkingServiceImpl implements ParkingService {
     @Override
     public ArrayList<Parking> selectAllParkings() {
 
+        ArrayList<Parking> parkings;
         Session session = factory.openSession();
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        Query query = session.createQuery("FROM Parking");
-        ArrayList<Parking> parkings = (ArrayList<Parking>) query.getResultList();
-
-        session.close();
+            Query query = session.createQuery("FROM Parking");
+            parkings = (ArrayList<Parking>) query.getResultList();
+        }
+        finally {
+            session.close();
+        }
 
         return parkings;
     }
@@ -42,12 +46,17 @@ public class ParkingServiceImpl implements ParkingService {
     @Override
     public Parking selectParking(int id) {
 
+        Parking parking;
         Session session = factory.openSession();
-        session.beginTransaction();
 
-        Parking parking = session.get(Parking.class, id);
+        try {
+            session.beginTransaction();
 
-        session.close();
+            parking = session.get(Parking.class, id);
+        }
+        finally {
+            session.close();
+        }
 
         return parking;
     }

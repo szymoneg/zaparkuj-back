@@ -29,14 +29,20 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public ArrayList<Place> selectPlaces(int id) {
 
+        ArrayList<Place> places;
         Session session = factory.openSession();
-        session.beginTransaction();
 
-        Query query = session.createQuery("FROM Place WHERE parking.idparking=" + id);  // pobranie wszystkich miejsc parkingowych o danym id
-        ArrayList<Place> places = (ArrayList<Place>) query.getResultList();
+        try {
+            session.beginTransaction();
 
-        session.getTransaction().commit();
-        session.close();
+            Query query = session.createQuery("FROM Place WHERE parking.idparking=" + id);  // pobranie wszystkich miejsc parkingowych o danym id
+            places = (ArrayList<Place>) query.getResultList();
+
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
 
         return places;
     }
@@ -44,15 +50,39 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public long selectCountPlaces(int id, boolean status) {
 
+        long countPlaces = 0;
         Session session = factory.openSession();
-        session.beginTransaction();
 
-        Query query = session.createQuery("SELECT count(idPlace) FROM Place WHERE parking.idparking=" + id + " AND status=" + status);
-        System.out.println(query.getResultList().get(0));
-        Long countPlaces = (Long) query.getResultList().get(0);
+        try {
+            session.beginTransaction();
 
-        session.close();
+            Query query = session.createQuery("SELECT count(idPlace) FROM Place WHERE parking.idparking=" + id + " AND status=" + status);
+            countPlaces = (Long) query.getResultList().get(0);
+        }
+        finally {
+            session.close();
+        }
 
         return countPlaces;
+    }
+
+    @Override
+    public Place selectPlace(int id) {
+
+        Place place;
+        Session session = factory.openSession();
+
+        try {
+            session.beginTransaction();
+
+            place = session.get(Place.class, id);
+
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+
+        return place;
     }
 }

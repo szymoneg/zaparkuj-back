@@ -32,7 +32,7 @@ public class PlaceController {
 
         // castowanie do PlaceDTO
         ArrayList<PlaceDTO> placeDTOS = places.stream()
-                .map(place -> new PlaceDTO(place.getPlaceName(), place.isStatus()))
+                .map(place -> new PlaceDTO(place.getIdPlace(), place.getPlaceName(), place.isStatus()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         return new ResponseEntity<>(placeDTOS, HttpStatus.OK);

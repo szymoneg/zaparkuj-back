@@ -14,4 +14,7 @@ public interface PlaceService {
     // id - id parkingu
     // status - status true to miejsca wolne, status false to miejsca zajęte
     public long selectCountPlaces(int id, boolean status);
+
+    /* ---- Funkcja zwracająca miejsce parkingowe o danym id ---- */
+    public Place selectPlace(int id);
 }

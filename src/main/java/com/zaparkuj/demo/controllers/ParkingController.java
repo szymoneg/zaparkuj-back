@@ -47,7 +47,6 @@ public class ParkingController {
 
         for(int i = 0; i < parkings.size(); i++) {
             lastSpace = parkings.get(i).getAddress().lastIndexOf(' ');
-            System.out.println(parkings.get(i).getAddress().substring(lastSpace + 1));
             if(!parkings.get(i).getAddress().substring(lastSpace + 1).equals(city)) {
                 parkings.remove(i);
                 i--;

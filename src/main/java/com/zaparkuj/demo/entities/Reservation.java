@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Entity

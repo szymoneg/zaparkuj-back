@@ -57,7 +57,7 @@ public class CarController {
             return new ResponseEntity<>(new MessageDTO(exception), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(true, HttpStatus.CREATED);
+        return new ResponseEntity<>(new MessageDTO("created"), HttpStatus.CREATED);
     }
 
     /* ---- Funkcja usuwająca samochód o podanym id ---- */
