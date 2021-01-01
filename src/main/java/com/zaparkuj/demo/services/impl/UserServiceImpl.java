@@ -1,6 +1,7 @@
 package com.zaparkuj.demo.services.impl;
 
 import com.zaparkuj.demo.dto.UserDTO;
+import com.zaparkuj.demo.entities.Sector;
 import com.zaparkuj.demo.entities.User;
 import com.zaparkuj.demo.repositories.UserRepository;
 import com.zaparkuj.demo.services.UserService;
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.factory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(User.class)
+                .addAnnotatedClass(Sector.class)
                 .buildSessionFactory();
     }
 

@@ -27,6 +27,7 @@ public class ReservationServiceImpl implements ReservationService {
         this.factory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Parking.class)
+                .addAnnotatedClass(Sector.class)
                 .addAnnotatedClass(Place.class)
                 .addAnnotatedClass(User.class)
                 .addAnnotatedClass(Car.class)

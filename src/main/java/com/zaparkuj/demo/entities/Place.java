@@ -25,14 +25,14 @@ public class Place {
     private boolean status;
 
     @OneToOne
-    @JoinColumn(name = "parking_idparking")
-    private Parking parking;
+    @JoinColumn(name = "sector_idsector")
+    private Sector sector;
 
     public Place() { }
 
-    public Place(String placeName, boolean status, Parking parking) {
+    public Place(String placeName, boolean status, Sector sector) {
         this.placeName = placeName;
         this.status = status;
-        this.parking = parking;
+        this.sector = sector;
     }
 }

@@ -2,6 +2,7 @@ package com.zaparkuj.demo.services.impl;
 
 import com.zaparkuj.demo.entities.Parking;
 import com.zaparkuj.demo.entities.Place;
+import com.zaparkuj.demo.entities.Sector;
 import com.zaparkuj.demo.services.PlaceService;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,6 +23,7 @@ public class PlaceServiceImpl implements PlaceService {
         this.factory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Parking.class)
+                .addAnnotatedClass(Sector.class)
                 .addAnnotatedClass(Place.class)
                 .buildSessionFactory();
     }
@@ -35,7 +37,7 @@ public class PlaceServiceImpl implements PlaceService {
         try {
             session.beginTransaction();
 
-            Query query = session.createQuery("FROM Place WHERE parking.idparking=" + id);  // pobranie wszystkich miejsc parkingowych o danym id
+            Query query = session.createQuery("FROM Place WHERE sector.idSector=" + id);  // pobranie wszystkich miejsc parkingowych o danym id
             places = (ArrayList<Place>) query.getResultList();
 
             session.getTransaction().commit();
@@ -56,7 +58,7 @@ public class PlaceServiceImpl implements PlaceService {
         try {
             session.beginTransaction();
 
-            Query query = session.createQuery("SELECT count(idPlace) FROM Place WHERE parking.idparking=" + id + " AND status=" + status);
+            Query query = session.createQuery("SELECT count(idPlace) FROM Place WHERE sector.idSector=" + id + " AND status=" + status);
             countPlaces = (Long) query.getResultList().get(0);
         }
         finally {

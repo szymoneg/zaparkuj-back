@@ -23,6 +23,7 @@
 
         <!-- Annotated entity classes -->
         <mapping class="com.zaparkuj.demo.entities.Parking"/>
+        <mapping class="com.zaparkuj.demo.entities.Sector" />
         <mapping class="com.zaparkuj.demo.entities.Place" />
 
     </session-factory>

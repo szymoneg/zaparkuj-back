@@ -108,16 +108,18 @@ HttpStatus.OK : ArrayList<Parking.class>
 127.0.0.1:8080/parkings/city/Tarnów
 ```
 
+# Sector Service
+
 # Place Service
 
-### Pobranie wszystkich miejsc parkingowych na parkingu o id - method - GET
+### Pobranie wszystkich miejsc parkingowych w sektorze o danym id - method - GET
 odpowiedź  
 HttpStatus.OK : ArrayList<PlaceDTO.class>
 ```
 127.0.0.1:8080/places/{id}
 127.0.0.1:8080/places/1
 ```
-### Pobranie ilości wolnych/zajętych miejsc parkingowych na parkingu o id - method - GET
+### Pobranie ilości wolnych/zajętych miejsc parkingowych w sektorze o danym id - method - GET
 odpowiedź  
 HttpStatus.OK : int
 ```
