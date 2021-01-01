@@ -23,6 +23,7 @@ public class CarServiceImpl implements CarService{
         this.factory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(User.class)
+                .addAnnotatedClass(Car.class)
                 .buildSessionFactory();
     }
 

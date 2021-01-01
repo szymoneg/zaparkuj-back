@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface PlaceService {
 
-    /* ---- Funkcja zwracająca wszystkie miejsca z parkingu o podanym id ---- */
+    /* ---- Funkcja zwracająca wszystkie miejsca z sektora o podanym id ---- */
     public ArrayList<Place> selectPlaces(int id);
 
     /* ---- Funkcja zwracająca ilość wolnych/zajętych miejsc ---- */
-    // id - id parkingu
+    // id - id sektora
     // status - status true to miejsca wolne, status false to miejsca zajęte
     public long selectCountPlaces(int id, boolean status);
 

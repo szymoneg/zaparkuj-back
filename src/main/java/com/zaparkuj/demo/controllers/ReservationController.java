@@ -47,7 +47,7 @@ public class ReservationController {
     /* ---- Funkcja zwracająca wszystkie rezerwacje ---- */
     @CrossOrigin
     @GetMapping("/reservations")
-    public ResponseEntity<ArrayList<ReservationResponse>> selectAllReservations() {
+    public ResponseEntity<ArrayList<ReservationResponse>> getAllReservationsController() {
 
         ArrayList<Reservation> reservations = reservationService.getAllReservations();
         ArrayList<ReservationResponse> reservationResponses = new ArrayList<>();
@@ -64,7 +64,7 @@ public class ReservationController {
     /* ---- Funkcja zwracająca dane rezerwacji o podanym id ---- */
     @CrossOrigin
     @GetMapping("/reservation/id/{id}")
-    public ResponseEntity<ReservationResponse> selectReservation(@PathVariable("id") int id) {
+    public ResponseEntity<ReservationResponse> getReservationController(@PathVariable("id") int id) {
 
         Reservation reservation = reservationService.getReservation(id);
         ReservationResponse reservationResponse = new ReservationResponse( reservation.getIdReservation(),
@@ -77,7 +77,7 @@ public class ReservationController {
     /* ---- Funkcja zwracająca wszystkie dane rezerwacji użytkownika o podanej nazwie username ---- */
     @CrossOrigin
     @GetMapping("/reservation/user/{username}")
-    public ResponseEntity<ArrayList<ReservationResponse>> selectReservationOfUsername(@PathVariable("username") String username) {
+    public ResponseEntity<ArrayList<ReservationResponse>> getReservationOfUsernameController(@PathVariable("username") String username) {
 
         ArrayList<Reservation> reservations = reservationService.getAllReservations();
         ArrayList<ReservationResponse> reservationResponses = new ArrayList<>();
@@ -101,7 +101,7 @@ public class ReservationController {
     /* ---- Funkcja zwracająca wszystkie aktywne dane rezerwacji użytkownika o podanej nazwie username ---- */
     @CrossOrigin
     @GetMapping("/reservation/status/{status}/{username}")
-    public ResponseEntity<ArrayList<ReservationResponse>> selectReservationTimeOfUsername(
+    public ResponseEntity<ArrayList<ReservationResponse>> getReservationTimeOfUsernameController(
             @PathVariable("status") boolean status,
             @PathVariable("username") String username) {
 
@@ -121,7 +121,7 @@ public class ReservationController {
     /* ---- Funkcja dodająca rezerwacje na podstawie przesłanego JSONA ---- */
     @CrossOrigin
     @RequestMapping(value = "/reservation/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addUserReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<?> addUserReservationController(@RequestBody ReservationRequest reservationRequest) {
 
         try {
             Car car = carService.selectCarOfId(reservationRequest.getIdCar());

@@ -50,7 +50,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/login","/register","/parkings","/parking/{id}","/places/{id}",
-                        "/places/countPlaces/{id}/{status}", "/parkings/city/{city}",
+                        "/places/countPlaces/{id}/{status}", "/parkings/city/{city}", "/place/{id}",
+                        "/sectors/{id}", "/sector/{id}",
                         "/reservations", "/reservation/id/{id}", "/reservation/user/{username}",
                         "/reservation/status/{status}/{username}", "/reservation/add",
                         "/user/changedata",

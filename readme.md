@@ -110,7 +110,31 @@ HttpStatus.OK : ArrayList<Parking.class>
 
 # Sector Service
 
+### Pobranie sektora o danych id - method - GET
+odpowiedź  
+HttpStatus.OK : SectorDTO.class
+```
+127.0.0.1:8080/sector/{id}
+127.0.0.1:8080/sector/1
+```
+
+### Pobranie wszystkich sektorów na parkingu o podanym id
+odpowiedź  
+HttpStatus.OK : ArrayList<SectorDTO.class>
+```
+127.0.0.1:8080/sectors/{id}
+127.0.0.1:8080/sectors/1
+```
+
 # Place Service
+
+### Pobranie miesjca parkingowego o podanym id - method - GET
+odpowiedź  
+HttpStatus.OK : PlaceDTO.class
+```
+127.0.0.1:8080/place/{id}
+127.0.0.1:8080/place/1
+```
 
 ### Pobranie wszystkich miejsc parkingowych w sektorze o danym id - method - GET
 odpowiedź  

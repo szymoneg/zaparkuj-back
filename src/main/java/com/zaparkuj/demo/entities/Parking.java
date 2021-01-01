@@ -17,7 +17,7 @@ public class Parking {
     @Id
     @Column(name = "idparking")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idparking;
+    private int idParking;
 
     @Column(name = "park_name")
     private String parkname;

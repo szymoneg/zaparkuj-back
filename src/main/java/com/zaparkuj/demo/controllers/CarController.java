@@ -29,7 +29,7 @@ public class CarController {
     /* ---- Funkcja wybierająca wszystkie samochody należące do użytkownika o podanym username ---- */
     @CrossOrigin
     @GetMapping("/cars/{username}")
-    public ResponseEntity<ArrayList<CarDTO>> selectCarsOfUser(@PathVariable("username") String username) {
+    public ResponseEntity<ArrayList<CarDTO>> getCarsOfUserController(@PathVariable("username") String username) {
 
         ArrayList<Car> cars = carService.selectCarsUser(username);
         ArrayList<CarDTO> carDTOS = new ArrayList<>();
@@ -43,7 +43,7 @@ public class CarController {
 
     /* ---- Funkcja dodająca samochód do użytkownika o podanym username ---- */
     @RequestMapping(value = "/addcar/{username}", method = RequestMethod.POST)
-    public ResponseEntity<?> addCar(@RequestBody CarDTO car, @PathVariable("username") String username) {
+    public ResponseEntity<?> addCarController(@RequestBody CarDTO car, @PathVariable("username") String username) {
 
         User user = userService.findUserByUsername(username);
 
@@ -62,7 +62,7 @@ public class CarController {
 
     /* ---- Funkcja usuwająca samochód o podanym id ---- */
     @RequestMapping(value = "/deletecar/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Boolean> deleteCarOfId(@PathVariable("id") int id) {
+    public ResponseEntity<Boolean> deleteCarOfIdController(@PathVariable("id") int id) {
 
         Car car = carService.selectCarOfId(id);
         if(car == null) {

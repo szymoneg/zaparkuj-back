@@ -23,10 +23,21 @@ public class PlaceController {
     @Autowired
     PlaceService placeService = new PlaceServiceImpl();
 
+    /* ---- Funkcja zwracająca dane miejsca parkingowego o podanym id ---- */
+    @CrossOrigin
+    @GetMapping("/place/{id}")
+    public ResponseEntity<PlaceDTO> getPlaceController(@PathVariable("id") int id) {
+
+        Place place = placeService.selectPlace(id);
+        PlaceDTO placeDTO = new PlaceDTO(place.getIdPlace(), place.getPlaceName(), place.isStatus());
+
+        return new ResponseEntity<>(placeDTO, HttpStatus.OK);
+    }
+
     /* ---- Funkcja zwracająca miejsca parkingowe na danym parkingu o podanym id ---- */
     @CrossOrigin
     @GetMapping("/places/{id}")
-    public ResponseEntity<ArrayList<PlaceDTO>> selectPlacesController(@PathVariable("id") int id) {
+    public ResponseEntity<ArrayList<PlaceDTO>> getPlacesController(@PathVariable("id") int id) {
 
         List<Place> places = placeService.selectPlaces(id);
 
@@ -41,7 +52,7 @@ public class PlaceController {
     /* ---- Funkcja zwracająca ilość wolnych/zajętych miejsc parkingowych na parkingu o podanym id ---- */
     @CrossOrigin
     @GetMapping("/places/countPlaces/{id}/{status}")
-    public ResponseEntity<Long> selectAllFreePlaces(@PathVariable("id") int id, @PathVariable("status") boolean status) {
+    public ResponseEntity<Long> getAllFreePlacesController(@PathVariable("id") int id, @PathVariable("status") boolean status) {
 
         Long result = placeService.selectCountPlaces(id, status);
 

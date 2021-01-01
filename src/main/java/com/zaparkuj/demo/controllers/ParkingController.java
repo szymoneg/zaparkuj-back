@@ -20,7 +20,7 @@ public class ParkingController {
     /* ---- Funkcja zwracająca parking o podanym id ---- */
     @CrossOrigin
     @GetMapping("/parking/{id}")
-    public ResponseEntity<Parking> selectParkingController(@PathVariable("id") int id) {
+    public ResponseEntity<Parking> getParkingController(@PathVariable("id") int id) {
 
         Parking parking = parkingService.selectParking(id);
 
@@ -30,7 +30,7 @@ public class ParkingController {
     /* ---- Funkcja zwracjąca wszystkie dostępne parkingi z bazy danych ---- */
     @CrossOrigin
     @GetMapping("/parkings")
-    public ResponseEntity<ArrayList<Parking>> selectAllParkingsController() {
+    public ResponseEntity<ArrayList<Parking>> getAllParkingsController() {
 
         ArrayList<Parking> parkings = parkingService.selectAllParkings();
 
@@ -40,7 +40,7 @@ public class ParkingController {
     /* ---- Funkcja zwracająca listę parkingów w danym mieście ---- */
     @CrossOrigin
     @GetMapping("/parkings/city/{city}")
-    public ResponseEntity<ArrayList<Parking>> selectAllCityParkings(@PathVariable("city") String city) {
+    public ResponseEntity<ArrayList<Parking>> getAllCityParkingsController(@PathVariable("city") String city) {
 
         ArrayList<Parking> parkings = parkingService.selectAllParkings();
         int lastSpace;
