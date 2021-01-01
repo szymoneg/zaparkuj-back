@@ -60,6 +60,8 @@ public class PlaceServiceImpl implements PlaceService {
 
             Query query = session.createQuery("SELECT count(idPlace) FROM Place WHERE sector.idSector=" + id + " AND status=" + status);
             countPlaces = (Long) query.getResultList().get(0);
+
+            session.getTransaction().commit();
         }
         finally {
             session.close();

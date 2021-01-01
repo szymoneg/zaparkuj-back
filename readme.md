@@ -143,7 +143,7 @@ HttpStatus.OK : ArrayList<PlaceDTO.class>
 127.0.0.1:8080/places/{id}
 127.0.0.1:8080/places/1
 ```
-### Pobranie ilości wolnych/zajętych miejsc parkingowych w sektorze o danym id - method - GET
+### Pobranie ilości wolnych/zajętych miejsc parkingowych w sektorze o danym id - method - GET (lepsza funkcja będzie zaimplementowana w Reservation Service)
 odpowiedź  
 HttpStatus.OK : int
 ```
@@ -153,6 +153,22 @@ HttpStatus.OK : int
 ```
 
 # Reservation Service
+
+### Pobranie ilości wolnych/zajętych miejsc parkingowych w sektorze między przesłanymi godzinami
+możliwe odpowiedzi od servera:  
+HttpStatus.OK : int  
+HttpStatus.BAD_REQUEST : "bad date begin and end reservation", "bad data format"
+```
+127.0.0.1:8080/sector/countplaces/{id}/{status}
+127.0.0.1:8080/sector/countplaces/1/true
+127.0.0.1:8080/sector/countplaces/1/false
+```
+```JSON
+{
+    "dateBegin": "2021-01-01T12:00:00.000+00:00",
+    "dateEnd": "2021-01-01T12:10:00.000+00:00"
+}
+```
 
 ### Pobranie wszystkich rezerwacji - method - GET
 odpowiedź  

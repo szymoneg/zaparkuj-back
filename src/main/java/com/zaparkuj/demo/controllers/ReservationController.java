@@ -1,20 +1,16 @@
 package com.zaparkuj.demo.controllers;
 
 import com.zaparkuj.demo.dto.MessageDTO;
+import com.zaparkuj.demo.dto.PlaceDTO;
 import com.zaparkuj.demo.dto.Request.ReservationRequest;
+import com.zaparkuj.demo.dto.Response.DateResponse;
 import com.zaparkuj.demo.dto.Response.ReservationResponse;
 import com.zaparkuj.demo.entities.Car;
 import com.zaparkuj.demo.entities.Place;
 import com.zaparkuj.demo.entities.Reservation;
 import com.zaparkuj.demo.entities.User;
-import com.zaparkuj.demo.services.CarService;
-import com.zaparkuj.demo.services.PlaceService;
-import com.zaparkuj.demo.services.ReservationService;
-import com.zaparkuj.demo.services.UserService;
-import com.zaparkuj.demo.services.impl.CarServiceImpl;
-import com.zaparkuj.demo.services.impl.PlaceServiceImpl;
-import com.zaparkuj.demo.services.impl.ReservationServiceImpl;
-import com.zaparkuj.demo.services.impl.UserServiceImpl;
+import com.zaparkuj.demo.services.*;
+import com.zaparkuj.demo.services.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -116,6 +112,48 @@ public class ReservationController {
         }
         
         return new ResponseEntity<>(reservationResponses, HttpStatus.OK);
+    }
+
+    /* Funkcja zwracająca ilość wolnych/zajętych miejsc parkingowych w sektorze między przesłanymi godzinami */
+    @CrossOrigin
+    @PostMapping("/sector/countplaces/{id}/{status}")
+    public ResponseEntity<?> getCountPlacesInSector(
+            @RequestBody DateResponse dateResponse, @PathVariable("id") int id, @PathVariable("status") boolean status) throws ParseException {
+
+        Date dateBegin;
+        Date dateEnd;
+        try {
+            dateBegin = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+                    .parse(dateResponse.getDateBegin());
+            dateEnd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+                    .parse(dateResponse.getDateEnd());
+
+            if(dateBegin.getTime() > dateEnd.getTime())
+                return new ResponseEntity<>(new MessageDTO("bad date begin and end reservation"), HttpStatus.BAD_REQUEST);
+        }
+        catch (ParseException exception) {
+            return new ResponseEntity<>(new MessageDTO("bad data format"), HttpStatus.BAD_REQUEST);
+        }
+
+        int countPlacesTrue = 0;
+        int countPlacesFalse = placeService.selectPlaces(id).size();
+        ArrayList<Reservation> reservations = reservationService.getAllReservations();
+        boolean checkTime;
+
+        for(Reservation reservation : reservations) {
+            if(reservation.getPlace().getSector().getIdSector() == id) {
+                checkTime = reservationService.checkPlaceToReservation(reservation.getPlace().getIdPlace(), dateBegin, dateEnd);
+                if(checkTime) {
+                    countPlacesTrue++;
+                    countPlacesFalse--;
+                }
+            }
+        }
+
+        if(status)
+            return new ResponseEntity<>(countPlacesTrue, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(countPlacesFalse, HttpStatus.OK);
     }
 
     /* ---- Funkcja dodająca rezerwacje na podstawie przesłanego JSONA ---- */

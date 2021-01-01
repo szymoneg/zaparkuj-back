@@ -40,6 +40,8 @@ public class CarServiceImpl implements CarService{
             Query query = session.createQuery("FROM Car WHERE holderCar.username=:user");
             query.setParameter("user", user);
             cars = (ArrayList<Car>) query.getResultList();
+
+            session.getTransaction().commit();
         }
         finally {
             session.close();
@@ -75,6 +77,8 @@ public class CarServiceImpl implements CarService{
             Query query = session.createQuery("FROM Car WHERE licencePlate=:plate");
             query.setParameter("plate", licencePlate);
             car = (Car) query.getSingleResult();
+
+            session.getTransaction().commit();
         }
         catch (NoResultException exc) {
             return null;
@@ -99,6 +103,8 @@ public class CarServiceImpl implements CarService{
             Query query = session.createQuery("FROM Car WHERE idCar=:id");
             query.setParameter("id", id);
             car = (Car) query.getSingleResult();
+
+            session.getTransaction().commit();
         }
         catch (NoResultException exc) {
             return null;

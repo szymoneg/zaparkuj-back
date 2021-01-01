@@ -46,6 +46,8 @@ public class ReservationServiceImpl implements ReservationService {
 
             Query query = session.createQuery("FROM Reservation WHERE idReservation=" + id);
             reservation = (Reservation) query.getResultList().get(0);
+
+            session.getTransaction().commit();
         }
         finally {
             session.close();
@@ -65,6 +67,8 @@ public class ReservationServiceImpl implements ReservationService {
 
             Query query = session.createQuery("FROM Reservation");
             reservations = (ArrayList<Reservation>) query.getResultList();
+
+            session.getTransaction().commit();
         }
         finally {
             session.close();
@@ -88,6 +92,8 @@ public class ReservationServiceImpl implements ReservationService {
             Query query = session.createQuery(hql);
             query.setParameter("nowDate", tstamp);
             reservations = (ArrayList<Reservation>) query.getResultList();
+
+            session.getTransaction().commit();
         }
         finally {
             session.close();
@@ -112,6 +118,8 @@ public class ReservationServiceImpl implements ReservationService {
             query.setParameter("status", status);
             query.setParameter("id", idUser);
             reservations = (ArrayList<Reservation>) query.getResultList();
+
+            session.getTransaction().commit();
         }
         finally {
             session.close();

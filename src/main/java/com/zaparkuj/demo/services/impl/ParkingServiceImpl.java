@@ -35,6 +35,8 @@ public class ParkingServiceImpl implements ParkingService {
 
             Query query = session.createQuery("FROM Parking");
             parkings = (ArrayList<Parking>) query.getResultList();
+
+            session.getTransaction().commit();
         }
         finally {
             session.close();
@@ -51,8 +53,8 @@ public class ParkingServiceImpl implements ParkingService {
 
         try {
             session.beginTransaction();
-
             parking = session.get(Parking.class, id);
+            session.getTransaction().commit();
         }
         finally {
             session.close();
