@@ -154,19 +154,33 @@ HttpStatus.OK : int
 
 # Reservation Service
 
-### Pobranie ilości wolnych/zajętych miejsc parkingowych w sektorze między przesłanymi godzinami
+### Pobranie sektorów (wolnych/zajętych miejsc parkingowych w sektorze między przesłanymi godzinami) - method - POST
 możliwe odpowiedzi od servera:  
-HttpStatus.OK : int  
+HttpStatus.OK : SectorResponse.class  
 HttpStatus.BAD_REQUEST : "bad date begin and end reservation", "bad data format"
 ```
-127.0.0.1:8080/sector/countplaces/{id}/{status}
-127.0.0.1:8080/sector/countplaces/1/true
-127.0.0.1:8080/sector/countplaces/1/false
+127.0.0.1:8080/sector/countplaces/{id}
+127.0.0.1:8080/sector/countplaces/1
 ```
 ```JSON
 {
     "dateBegin": "2021-01-01T12:00:00.000+00:00",
     "dateEnd": "2021-01-01T12:10:00.000+00:00"
+}
+```
+
+### Pobranie wolnych/zajętych miejsc parkingowych w sektorze o id oraz w czasie miedzy przesłanymi datami - method - POST
+możliwe odpowiedzi od servera:  
+HttpStatus.OK : PlaceDTO.class  
+HttpStatus.BAD_REQUEST : "bad date begin and end reservation", "bad data format"
+```
+127.0.0.1:8080/place/countplaces/{id}
+127.0.0.1:8080/place/countplaces/1
+```
+```JSON
+{
+    "dateBegin": "2021-01-01T12:00:00.000+00:00",
+    "dateEnd": "2021-02-01T12:10:00.000+00:00"
 }
 ```
 

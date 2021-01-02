@@ -15,8 +15,11 @@ public interface ReservationService {
     /* ---- Funkcja zwracająca wszystkie rezerwacje ---- */
     public ArrayList<Reservation> getAllReservations();
 
+    /* ---- Funkcja zwracająca wszystkie aktywne (w tym momencie) rezerwacje ---- */
+    public ArrayList<Reservation> getAllNowActiveReservations();
+
     /* ---- Funkcja zwracająca wszystkie aktywne rezerwacje ---- */
-    public ArrayList<Reservation> getAllActiveReservations();
+    public ArrayList<Reservation> getAllReservations(boolean status);
 
     /* ---- Funkcja zwracająca wszystkie aktywne/nieaktywne rezerwacje użytkownika o podanym id ---- */
     public ArrayList<Reservation> getUserReservation(int idUser, boolean status);

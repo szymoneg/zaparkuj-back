@@ -78,7 +78,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public ArrayList<Reservation> getAllActiveReservations() {
+    public ArrayList<Reservation> getAllNowActiveReservations() {
 
         ArrayList<Reservation> reservations;
         Date dt = new Date();
@@ -91,6 +91,28 @@ public class ReservationServiceImpl implements ReservationService {
             String hql = "FROM Reservation r WHERE dateEnd < :nowDate AND statusReservation=true";
             Query query = session.createQuery(hql);
             query.setParameter("nowDate", tstamp);
+            reservations = (ArrayList<Reservation>) query.getResultList();
+
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+
+        return reservations;
+    }
+
+    @Override
+    public ArrayList<Reservation> getAllReservations(boolean status) {
+
+        ArrayList<Reservation> reservations;
+        Session session = factory.openSession();
+
+        try {
+            session.beginTransaction();
+
+            Query query = session.createQuery("FROM Reservation WHERE statusReservation=:st");
+            query.setParameter("st", status);
             reservations = (ArrayList<Reservation>) query.getResultList();
 
             session.getTransaction().commit();
@@ -170,7 +192,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public boolean checkPlaceToReservation(int idPlace, Date beginDate, Date endDate) {
 
-        ArrayList<Reservation> reservations = getAllActiveReservations();
+        ArrayList<Reservation> reservations = getAllReservations(true);
         Date beginReservation;
         Date endReservation;
 

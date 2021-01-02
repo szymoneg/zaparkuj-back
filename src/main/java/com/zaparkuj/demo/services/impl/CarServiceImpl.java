@@ -100,6 +100,7 @@ public class CarServiceImpl implements CarService{
         Session session = factory.openSession();
 
         try {
+            session.beginTransaction();
             Query query = session.createQuery("FROM Car WHERE idCar=:id");
             query.setParameter("id", id);
             car = (Car) query.getSingleResult();

@@ -5,10 +5,8 @@ import com.zaparkuj.demo.dto.PlaceDTO;
 import com.zaparkuj.demo.dto.Request.ReservationRequest;
 import com.zaparkuj.demo.dto.Response.DateResponse;
 import com.zaparkuj.demo.dto.Response.ReservationResponse;
-import com.zaparkuj.demo.entities.Car;
-import com.zaparkuj.demo.entities.Place;
-import com.zaparkuj.demo.entities.Reservation;
-import com.zaparkuj.demo.entities.User;
+import com.zaparkuj.demo.dto.Response.SectorResponse;
+import com.zaparkuj.demo.entities.*;
 import com.zaparkuj.demo.services.*;
 import com.zaparkuj.demo.services.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,9 @@ public class ReservationController {
     @Autowired
     private PlaceService placeService = new PlaceServiceImpl();
 
+    @Autowired
+    private SectorService sectorService = new SectorServiceImpl();
+
     /* ---- Funkcja zwracająca wszystkie rezerwacje ---- */
     @CrossOrigin
     @GetMapping("/reservations")
@@ -50,7 +51,7 @@ public class ReservationController {
 
         for(Reservation reservation : reservations) {
             reservationResponses.add(new ReservationResponse(reservation.getIdReservation(),
-                    reservation.getPlace().getIdPlace(), reservation.getCar().getIdCar(),
+                    reservation.getPlace().getPlaceName(), reservation.getCar().getLicencePlate(),
                     reservation.getDateBegin(), reservation.getDateBegin(), reservation.isStatusReservation()));
         }
 
@@ -64,7 +65,7 @@ public class ReservationController {
 
         Reservation reservation = reservationService.getReservation(id);
         ReservationResponse reservationResponse = new ReservationResponse( reservation.getIdReservation(),
-                reservation.getPlace().getIdPlace(), reservation.getCar().getIdCar(),
+                reservation.getPlace().getPlaceName(), reservation.getCar().getLicencePlate(),
                 reservation.getDateBegin(), reservation.getDateEnd(), reservation.isStatusReservation());
 
         return new ResponseEntity<>(reservationResponse, HttpStatus.OK);
@@ -85,7 +86,7 @@ public class ReservationController {
             }
             else {
                 reservationResponses.add(new ReservationResponse(reservations.get(i).getIdReservation(),
-                        reservations.get(i).getPlace().getIdPlace(), reservations.get(i).getCar().getIdCar(),
+                        reservations.get(i).getPlace().getPlaceName(), reservations.get(i).getCar().getLicencePlate(),
                         reservations.get(i).getDateBegin(), reservations.get(i).getDateBegin(),
                         reservations.get(i).isStatusReservation()));
             }
@@ -107,18 +108,19 @@ public class ReservationController {
 
         for(Reservation reservation : reservations) {
             reservationResponses.add(new ReservationResponse(reservation.getIdReservation(),
-                    reservation.getPlace().getIdPlace(), reservation.getCar().getIdCar(),
+                    reservation.getPlace().getPlaceName(), reservation.getCar().getLicencePlate(),
                     reservation.getDateBegin(), reservation.getDateEnd(), reservation.isStatusReservation()));
         }
         
         return new ResponseEntity<>(reservationResponses, HttpStatus.OK);
     }
 
-    /* Funkcja zwracająca ilość wolnych/zajętych miejsc parkingowych w sektorze między przesłanymi godzinami */
+    /* Funkcja zwracająca ilość wolnych/zajętych miejsc parkingowych w sektorach
+    na parkingu o podanym id między przesłanymi godzinami */
     @CrossOrigin
-    @PostMapping("/sector/countplaces/{id}/{status}")
-    public ResponseEntity<?> getCountPlacesInSector(
-            @RequestBody DateResponse dateResponse, @PathVariable("id") int id, @PathVariable("status") boolean status) throws ParseException {
+    @PostMapping("/sector/countsector/{id}")
+    public ResponseEntity<?> getCountSectorInParking(
+            @RequestBody DateResponse dateResponse, @PathVariable("id") int id) throws ParseException {
 
         Date dateBegin;
         Date dateEnd;
@@ -135,25 +137,73 @@ public class ReservationController {
             return new ResponseEntity<>(new MessageDTO("bad data format"), HttpStatus.BAD_REQUEST);
         }
 
-        int countPlacesTrue = 0;
-        int countPlacesFalse = placeService.selectPlaces(id).size();
-        ArrayList<Reservation> reservations = reservationService.getAllReservations();
-        boolean checkTime;
+        ArrayList<SectorResponse> sectorResponses = new ArrayList<>();
+        ArrayList<Sector> sectors = sectorService.selectSectorsOnParking(id);
+        ArrayList<Reservation> reservations = reservationService.getAllReservations(true);
+
+        for(Sector sector : sectors) {
+            long t = placeService.selectCountPlaces(sector.getIdSector(), true);
+            long f = placeService.selectCountPlaces(sector.getIdSector(), false);
+            sectorResponses.add(new SectorResponse(sector.getIdSector(), sector.getSectorName(), (int) (t+f), 0, sector.getPrice()));
+        }
 
         for(Reservation reservation : reservations) {
-            if(reservation.getPlace().getSector().getIdSector() == id) {
-                checkTime = reservationService.checkPlaceToReservation(reservation.getPlace().getIdPlace(), dateBegin, dateEnd);
-                if(checkTime) {
-                    countPlacesTrue++;
-                    countPlacesFalse--;
+            for(int i = 0; i < sectorResponses.size(); i++) {
+                if(reservation.getPlace().getSector().getIdSector() == sectorResponses.get(i).getIdSector()) {
+                    ArrayList<Place> places = placeService.selectPlaces(sectorResponses.get(i).getIdSector());
+                    for(Place place : places) {
+                        if(place.getIdPlace() == reservation.getPlace().getIdPlace()) {
+                            sectorResponses.get(i).setFreePlaces(sectorResponses.get(i).getFreePlaces()-1);
+                            sectorResponses.get(i).setOccupatePlaces(sectorResponses.get(i).getOccupatePlaces()+1);
+                        }
+                    }
                 }
             }
         }
 
-        if(status)
-            return new ResponseEntity<>(countPlacesTrue, HttpStatus.OK);
-        else
-            return new ResponseEntity<>(countPlacesFalse, HttpStatus.OK);
+        return new ResponseEntity<>(sectorResponses, HttpStatus.OK);
+    }
+
+    /* ---- Funkcja zwraca listę miejsc parkingowych dostępnych/niedostępnych
+    w sektorze o przesłanym id oraz przesłanych godzinach ---- */
+    @CrossOrigin
+    @PostMapping("/place/countplaces/{id}")
+    public ResponseEntity<?> getCountPlacesInSector(
+            @PathVariable("id") int id, @RequestBody DateResponse dateResponse) {
+
+        Date dateBegin;
+        Date dateEnd;
+        try {
+            dateBegin = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+                    .parse(dateResponse.getDateBegin());
+            dateEnd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+                    .parse(dateResponse.getDateEnd());
+
+            if(dateBegin.getTime() > dateEnd.getTime())
+                return new ResponseEntity<>(new MessageDTO("bad date begin and end reservation"), HttpStatus.BAD_REQUEST);
+        }
+        catch (ParseException exception) {
+            return new ResponseEntity<>(new MessageDTO("bad data format"), HttpStatus.BAD_REQUEST);
+        }
+
+        ArrayList<PlaceDTO> placeDTOS = new ArrayList<>();
+        ArrayList<Place> places = placeService.selectPlaces(id);
+        ArrayList<Reservation> reservations = reservationService.getAllReservations(true);
+
+        for(Place place : places) {
+            placeDTOS.add(new PlaceDTO(place.getIdPlace(), place.getPlaceName(), true));
+        }
+
+        for(Reservation reservation : reservations) {
+            for(int i = 0; i < placeDTOS.size(); i++) {
+                if(reservation.getPlace().getIdPlace() == placeDTOS.get(i).getIdPlace()) {
+                    if(!reservationService.checkPlaceToReservation(placeDTOS.get(i).getIdPlace(), dateBegin, dateEnd))
+                        placeDTOS.get(i).setStatus(false);
+                }
+            }
+        }
+
+        return new ResponseEntity<>(placeDTOS, HttpStatus.OK);
     }
 
     /* ---- Funkcja dodająca rezerwacje na podstawie przesłanego JSONA ---- */
@@ -201,7 +251,7 @@ public class ReservationController {
     @Scheduled(fixedRate = 300000)
     public void checkReservations() {
 
-        ArrayList<Reservation> reservations = reservationService.getAllActiveReservations();
+        ArrayList<Reservation> reservations = reservationService.getAllNowActiveReservations();
 
         for(Reservation reservation : reservations)
             reservationService.desactiveReservation(reservation);

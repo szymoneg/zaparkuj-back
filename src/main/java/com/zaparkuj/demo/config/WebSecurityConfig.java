@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login","/register","/parkings","/parking/{id}","/places/{id}",
                         "/places/countPlaces/{id}/{status}", "/parkings/city/{city}", "/place/{id}",
-                        "/sectors/{id}", "/sector/{id}", "/sector/countplaces/{id}/{status}",
+                        "/sectors/{id}", "/sector/{id}", "/sector/countsector/{id}", "/place/countplaces/{id}",
                         "/reservations", "/reservation/id/{id}", "/reservation/user/{username}",
                         "/reservation/status/{status}/{username}", "/reservation/add",
                         "/user/changedata",
