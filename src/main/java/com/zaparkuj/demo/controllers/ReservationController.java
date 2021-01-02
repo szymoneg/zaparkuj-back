@@ -49,9 +49,10 @@ public class ReservationController {
         ArrayList<Reservation> reservations = reservationService.getAllReservations();
         ArrayList<ReservationResponse> reservationResponses = new ArrayList<>();
 
-        for(Reservation reservation : reservations) {
+            for(Reservation reservation : reservations) {
             reservationResponses.add(new ReservationResponse(reservation.getIdReservation(),
-                    reservation.getPlace().getPlaceName(), reservation.getCar().getLicencePlate(),
+                    reservation.getPlace().getPlaceName(), reservation.getCar().getMark(),
+                    reservation.getCar().getLicencePlate(), reservation.getPlace().getSector().getParking().getAddress(),
                     reservation.getDateBegin(), reservation.getDateBegin(), reservation.isStatusReservation()));
         }
 
@@ -63,9 +64,10 @@ public class ReservationController {
     @GetMapping("/reservation/id/{id}")
     public ResponseEntity<ReservationResponse> getReservationController(@PathVariable("id") int id) {
 
-        Reservation reservation = reservationService.getReservation(id);
+            Reservation reservation = reservationService.getReservation(id);
         ReservationResponse reservationResponse = new ReservationResponse( reservation.getIdReservation(),
-                reservation.getPlace().getPlaceName(), reservation.getCar().getLicencePlate(),
+                reservation.getPlace().getPlaceName(), reservation.getCar().getMark(),
+                reservation.getCar().getLicencePlate(), reservation.getPlace().getSector().getParking().getAddress(),
                 reservation.getDateBegin(), reservation.getDateEnd(), reservation.isStatusReservation());
 
         return new ResponseEntity<>(reservationResponse, HttpStatus.OK);
@@ -85,8 +87,9 @@ public class ReservationController {
                 i--;
             }
             else {
-                reservationResponses.add(new ReservationResponse(reservations.get(i).getIdReservation(),
-                        reservations.get(i).getPlace().getPlaceName(), reservations.get(i).getCar().getLicencePlate(),
+                    reservationResponses.add(new ReservationResponse(reservations.get(i).getIdReservation(),
+                        reservations.get(i).getPlace().getPlaceName(), reservations.get(i).getCar().getMark(),
+                        reservations.get(i).getCar().getLicencePlate(), reservations.get(i).getPlace().getSector().getParking().getAddress(),
                         reservations.get(i).getDateBegin(), reservations.get(i).getDateBegin(),
                         reservations.get(i).isStatusReservation()));
             }
@@ -106,9 +109,10 @@ public class ReservationController {
         User user = userService.findUserByUsername(username);
         ArrayList<Reservation> reservations = reservationService.getUserReservation(user.getIdUser(), status);
 
-        for(Reservation reservation : reservations) {
+            for(Reservation reservation : reservations) {
             reservationResponses.add(new ReservationResponse(reservation.getIdReservation(),
-                    reservation.getPlace().getPlaceName(), reservation.getCar().getLicencePlate(),
+                    reservation.getPlace().getPlaceName(), reservation.getCar().getMark(),
+                    reservation.getCar().getLicencePlate(), reservation.getPlace().getSector().getParking().getAddress(),
                     reservation.getDateBegin(), reservation.getDateEnd(), reservation.isStatusReservation()));
         }
         
