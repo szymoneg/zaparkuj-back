@@ -3,6 +3,9 @@ package com.zaparkuj.demo;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,22 +13,23 @@ public class Test {
 
     public static void main(String[] args) throws ParseException {
 
-        System.out.println(System.currentTimeMillis());
+        final String OLD_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+        final String NEW_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-        /*String myDate = "2020-01-01 12:00:00";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date timeStamp = sdf.parse(myDate);
-        System.out.println(timeStamp);
+        String oldDateString = "2021-01-01T12:00:00.000+00:00";
+        String newDateString;
 
-        long miliseconds = timeStamp.getTime();
-        System.out.println(miliseconds);*/
+        SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
+        Date d = sdf.parse(oldDateString);
 
-        Date dateBegin = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-                .parse("2030-02-16T19:38:40.000+00:00");
-        Date dateEnd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-                .parse("2031-02-16T19:38:40.000+00:00");
+        sdf.applyPattern(NEW_FORMAT);
+        newDateString = sdf.format(d);
+        System.out.println(newDateString);
 
-        System.out.println(dateBegin.getTime() < dateEnd.getTime());
+        sdf.applyPattern(OLD_FORMAT);
+        newDateString = sdf.format(d);
+        System.out.println(newDateString);
+
 
     }
 }

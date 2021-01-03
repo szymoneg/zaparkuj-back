@@ -17,4 +17,7 @@ public interface PlaceService {
 
     /* ---- Funkcja zwracająca miejsce parkingowe o danym id ---- */
     public Place selectPlace(int id);
+
+    /* ---- Funkcja zmienia status miejsca parkingowego ---- */
+    public void changePlace(int id, boolean status);
 }

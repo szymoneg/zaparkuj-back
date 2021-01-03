@@ -24,7 +24,7 @@ public class Sector {
     @Column(name = "price")
     private float price;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parking_idparking")
     private Parking parking;
 

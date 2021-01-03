@@ -15,8 +15,11 @@ public interface ReservationService {
     /* ---- Funkcja zwracająca wszystkie rezerwacje ---- */
     public ArrayList<Reservation> getAllReservations();
 
-    /* ---- Funkcja zwracająca wszystkie aktywne (w tym momencie) rezerwacje ---- */
+    /* ---- Funkcja zwracająca wszystkie rezerwacje które powinny być aktywne (w tym momencie) ---- */
     public ArrayList<Reservation> getAllNowActiveReservations();
+
+    /* ---- Funkcja zwracająca wszystkie rezerwacje które powinny być nieaktyne (w tym momencie) ---- */
+    public ArrayList<Reservation> getAllNowDesactiveReservations();
 
     /* ---- Funkcja zwracająca wszystkie aktywne rezerwacje ---- */
     public ArrayList<Reservation> getAllReservations(boolean status);
@@ -24,12 +27,15 @@ public interface ReservationService {
     /* ---- Funkcja zwracająca wszystkie aktywne/nieaktywne rezerwacje użytkownika o podanym id ---- */
     public ArrayList<Reservation> getUserReservation(int idUser, boolean status);
 
-    /* ---- Funkcja zmieniająca status miejsca w aktywnej rezerwacji ---- */
-    public void desactiveReservation(Reservation reservation);
-
     /* ---- Funkcja dodająca rezerwacje ---- */
     public boolean insertReservation(Reservation reservation);
 
     /* ---- Funkcja sprawdzajaca czy w danym czasie jest dostępny parking ---- */
     public boolean checkPlaceToReservation(int idPlace, Date beginDate, Date endDate);
+
+    /* ---- Funkcja usuwająca rezerwacje ---- */
+    public boolean deleteReservation(Reservation reservation);
+
+    /* ---- Funkcja zmieniająca status rezerwacji ---- */
+    public void changeStatus(int id, boolean status);
 }

@@ -127,7 +127,6 @@ public class CarServiceImpl implements CarService{
 
         try {
             session.beginTransaction();
-            System.out.println(car);
 
             session.remove(session.merge(car));
 

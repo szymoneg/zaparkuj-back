@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/sectors/{id}", "/sector/{id}", "/sector/countsector/{id}", "/place/countplaces/{id}",
                         "/reservations", "/reservation/id/{id}", "/reservation/user/{username}",
                         "/reservation/status/{status}/{username}", "/reservation/add",
-                        "/user/changedata",
+                        "/user/changedata", "/deletereservation/{id}",
                         "/cars/{username}", "/addcar/{username}", "/deletecar/{id}",
                         "/api/javainuse"
                         )

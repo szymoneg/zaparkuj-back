@@ -250,14 +250,47 @@ public class ReservationController {
         return new ResponseEntity<>(new MessageDTO("created"), HttpStatus.CREATED);
     }
 
+    /* ---- Funkcja usuwająca rezerwacje o podanym id ---- */
+    @RequestMapping(value = "/deletereservation/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<MessageDTO> deleteCarOfIdController(@PathVariable("id") int id) {
+
+        Reservation reservation = reservationService.getReservation(id);
+        Date dt = new Date();
+        Timestamp tstamp = new Timestamp(dt.getTime());
+
+        if(reservation == null) {
+            return new ResponseEntity<>(new MessageDTO("reservation not found"), HttpStatus.NOT_FOUND);
+        }
+        if(!(reservation.getDateBegin().getTime() > tstamp.getTime()) && !(reservation.getDateEnd().getTime() < tstamp.getTime())) {
+            return new ResponseEntity<>(new MessageDTO("reservation is now active"), HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        boolean result = reservationService.deleteReservation(reservation);
+
+        if(result)
+            return new ResponseEntity<>(new MessageDTO("deleted"), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(new MessageDTO("something went wrong"), HttpStatus.NOT_ACCEPTABLE);
+    }
+
     /* ---- Funkcja wykonuje się na starcie i co określony czas sprawdza aktywne rezerwacje,
             które powinny się skończyć i zmienia ich status ---- */
-    @Scheduled(fixedRate = 300000)
-    public void checkReservations() {
+    //@Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 10000)
+    public void checkReservations() throws ParseException {
 
-        ArrayList<Reservation> reservations = reservationService.getAllNowActiveReservations();
+        ArrayList<Reservation> reservationsDesactive = reservationService.getAllNowActiveReservations();
 
-        for(Reservation reservation : reservations)
-            reservationService.desactiveReservation(reservation);
+        for(Reservation reservation : reservationsDesactive) {
+            if(reservation.getPlace().isStatus())
+                placeService.changePlace(reservation.getPlace().getIdPlace(), false);
+        }
+
+        ArrayList<Reservation> reservationsActive = reservationService.getAllNowDesactiveReservations();
+
+        for(Reservation reservation : reservationsActive) {
+            reservationService.changeStatus(reservation.getIdReservation(), false);
+            placeService.changePlace(reservation.getPlace().getIdPlace(), true);
+        }
     }
 }

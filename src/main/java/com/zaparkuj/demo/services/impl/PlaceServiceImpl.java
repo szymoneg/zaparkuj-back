@@ -89,4 +89,23 @@ public class PlaceServiceImpl implements PlaceService {
 
         return place;
     }
+
+    @Override
+    public void changePlace(int id, boolean status) {
+
+        Session session = factory.openSession();
+
+        try {
+            session.beginTransaction();
+
+            Place place = session.get(Place.class, id);
+            place.setStatus(status);
+            session.update(place);
+
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+    }
 }

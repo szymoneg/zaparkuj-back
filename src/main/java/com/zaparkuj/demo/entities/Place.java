@@ -24,7 +24,7 @@ public class Place {
     @Column(name = "status")
     private boolean status;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sector_idsector")
     private Sector sector;
 

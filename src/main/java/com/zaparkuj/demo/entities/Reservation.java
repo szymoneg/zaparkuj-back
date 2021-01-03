@@ -3,6 +3,8 @@ package com.zaparkuj.demo.entities;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -36,7 +38,8 @@ public class Reservation {
     @JoinColumn(name = "car_idcar")
     private Car car;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @OneToOne
     @JoinColumn(name = "place_idplace")
     private Place place;
 

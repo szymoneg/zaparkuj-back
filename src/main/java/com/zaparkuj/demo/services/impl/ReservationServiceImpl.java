@@ -81,16 +81,44 @@ public class ReservationServiceImpl implements ReservationService {
     public ArrayList<Reservation> getAllNowActiveReservations() {
 
         ArrayList<Reservation> reservations;
-        Date dt = new Date();
-        Timestamp tstamp = new Timestamp(dt.getTime());
 
         Session session = factory.openSession();
         try {
+            Date dt = new Date();
+            Timestamp tstamp = new Timestamp(dt.getTime());
+
             session.beginTransaction();
 
-            String hql = "FROM Reservation r WHERE dateEnd < :nowDate AND statusReservation=true";
+            String hql = "FROM Reservation r WHERE dateBegin < :nowDate AND dateEnd > :nowDate AND statusReservation=true";
             Query query = session.createQuery(hql);
             query.setParameter("nowDate", tstamp);
+            reservations = (ArrayList<Reservation>) query.getResultList();
+
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+
+        return reservations;
+    }
+
+    @Override
+    public ArrayList<Reservation> getAllNowDesactiveReservations() {
+
+        ArrayList<Reservation> reservations;
+
+        Session session = factory.openSession();
+        try {
+            Date dt = new Date();
+            Timestamp tstamp = new Timestamp(dt.getTime());
+
+            session.beginTransaction();
+
+            String hql = "FROM Reservation r WHERE dateEnd < :nowDate AND statusReservation is :arg";
+            Query query = session.createQuery(hql);
+            query.setParameter("nowDate", tstamp);
+            query.setParameter("arg", true);
             reservations = (ArrayList<Reservation>) query.getResultList();
 
             session.getTransaction().commit();
@@ -151,26 +179,6 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void desactiveReservation(Reservation reservation) {
-
-        Session session = factory.openSession();
-
-        try {
-            Transaction transaction = session.beginTransaction();
-
-            reservation.getPlace().setStatus(true);
-            reservation.setStatusReservation(false);
-
-            session.update(reservation);
-            session.getTransaction();
-            transaction.commit();
-        }
-        finally {
-            session.close();
-        }
-    }
-
-    @Override
     public boolean insertReservation(Reservation reservation) {
 
         Session session = factory.openSession();
@@ -210,5 +218,46 @@ public class ReservationServiceImpl implements ReservationService {
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean deleteReservation(Reservation reservation) {
+
+        Session session = factory.openSession();
+
+        try {
+            session.beginTransaction();
+
+            session.remove(session.merge(reservation));
+
+            session.getTransaction().commit();
+        }
+        catch (Exception exc) {
+            exc.printStackTrace();
+            return false;
+        }
+        finally {
+            session.close();
+        }
+        return true;
+    }
+
+    @Override
+    public void changeStatus(int id, boolean status) {
+
+        Session session = factory.openSession();
+
+        try {
+            session.beginTransaction();
+
+            Reservation reservation = session.get(Reservation.class, id);
+            reservation.setStatusReservation(status);
+            session.update(reservation);
+
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 }

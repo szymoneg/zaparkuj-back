@@ -159,8 +159,8 @@ możliwe odpowiedzi od servera:
 HttpStatus.OK : SectorResponse.class  
 HttpStatus.BAD_REQUEST : "bad date begin and end reservation", "bad data format"
 ```
-127.0.0.1:8080/sector/countplaces/{id}
-127.0.0.1:8080/sector/countplaces/1
+127.0.0.1:8080/sector/countsector/{id}
+127.0.0.1:8080/sector/countsector/1
 ```
 ```JSON
 {
@@ -228,4 +228,14 @@ HttpStatus.BAD_REQUEST : "not found data", "bad date begin and end reservation",
     "dateBegin": "2020-01-01T12:00:00.000+00:00",
     "dateEnd":  "2020-01-01T14:00:00.000+00:00"
 }
+```
+
+### Usuwanie rezerwacji o danym id - method - DELETE
+możliwe odpowiedzi od servera:  
+HttpStatus.OK : "deleted"  
+HttpStatus.NOT_FOUND : "reservation not found"  
+HttpStatus.NOT_ACCEPTABLE : "reservation is now active", "something went wrong"
+```
+127.0.0.1:8080/deletereservation/{id}
+127.0.0.1:8080/deletereservation/4
 ```
