@@ -6,13 +6,14 @@ http://localhost:8080/swagger-ui.html#/
 
 ### Rejestracja użytkownia - method - POST
 możliwe odpowiedzi od servera:  
-HttpStatus.OK : JSON z danymi użytkownika  
-HttpStatus.BAD_REQUEST : "email exist"
+HttpStatus.OK : User.class  
+HttpStatus.BAD_REQUEST : "bad format username or email", "email or login exist"
 ```
 127.0.0.1:8080/register
 ```
 ```json
 {
+	"username": "admin",
     "email": "admin@admin.pl",
     "password": "123"
 }
@@ -20,8 +21,7 @@ HttpStatus.BAD_REQUEST : "email exist"
 
 ### Logowanie użytkownika - method - POST
 możliwe odpowiedzi od servera:  
-HttpStatus.OK : JSON JwtResponse.class  
-HttpStatus.BAD_REQUEST :
+HttpStatus.OK : JwtResponse.class
 ```
 127.0.0.1:8080/login
 ```
@@ -34,8 +34,8 @@ HttpStatus.BAD_REQUEST :
 
 ### Uaktualnienie danych na podstawie adresu email - method - POST
 możliwe odpowiedzi od servera:  
-HttpStatus.OK : true  
-HttpStatus.BAD_REQUEST : "Incorrect data", "Username exist", "Something is wrong"
+HttpStatus.OK : "changed"  
+HttpStatus.BAD_REQUEST : "not found user", "email exist", "validation exception"
 ```
 127.0.0.1:8080/user/changedata
 ```

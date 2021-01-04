@@ -1,4 +1,4 @@
-package com.zaparkuj.demo.dto;
+package com.zaparkuj.demo.dto.Request;
 
 import lombok.*;
 
