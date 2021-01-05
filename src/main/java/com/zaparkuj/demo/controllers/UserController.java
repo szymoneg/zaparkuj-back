@@ -3,6 +3,7 @@ import com.zaparkuj.demo.config.JwtTokenUtil;
 import com.zaparkuj.demo.dto.*;
 import com.zaparkuj.demo.dto.Request.UserDataDTO;
 import com.zaparkuj.demo.entities.User;
+import com.zaparkuj.demo.services.MailService;
 import com.zaparkuj.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.ValidationException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Random;
 
 @RestController
 @CrossOrigin
@@ -28,6 +34,13 @@ public class UserController {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    private MailService mailService;
+
+    @Autowired
+    public UserController(MailService mailService) {
+        this.mailService = mailService;
+    }
 
     @GetMapping("/hello")
     public String hello(){
@@ -102,5 +115,39 @@ public class UserController {
         } catch (BadCredentialsException e) {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
+    }
+
+    @GetMapping("/sendMail/{username}")
+    public ResponseEntity<?> sendMailWithNewPassword(@PathVariable("username") String userName) throws MessagingException {
+
+        final String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        String generatePassword = "";
+        int len = 7;
+        for(int i = 0; i < len; i++) {
+            generatePassword += chars.charAt(new Random().nextInt(chars.length()));
+        }
+
+        userService.changePassword(userName, generatePassword);
+
+        User user = userService.findUserByUsername(userName);
+
+        mailService.sendMail(user.getEmail(), "Przypomnienie hasła",
+                "nowe hasło: " + generatePassword, true);
+
+        return new ResponseEntity<>(new MessageDTO("sends"), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/changepassword", method = RequestMethod.POST)
+    public ResponseEntity<?> updatePassword(@RequestBody UserDTO userDTO) {
+
+        User user = userService.findUserByUsername(userDTO.getUsername());
+        if(user == null)
+            user = userService.findUserByEmail(userDTO.getEmail());
+        if(user == null)
+            return new ResponseEntity<>(new MessageDTO("user not found"), HttpStatus.BAD_REQUEST);
+
+        userService.changePassword(user.getUsername(), userDTO.getPassword());
+
+        return new ResponseEntity<>(new MessageDTO("changed"), HttpStatus.OK);
     }
 }

@@ -19,4 +19,7 @@ public interface UserService {
     /* ---- Funkcja zwraca obiekt użytkownika szukanego po username ---- */
     public User findUserByUsername(String username);
 
+    /* ---- Funkcja zmieniająca hasło użytkownika ---- */
+    public void changePassword(String userName, String newPassword);
+
 }

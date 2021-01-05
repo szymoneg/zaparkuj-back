@@ -27,7 +27,7 @@ HttpStatus.OK : JwtResponse.class
 ```
 ```json
 {
-    "email": "admin@admin.pl",
+    "username": "admin",
     "password": "123"
 }
 ```
@@ -46,6 +46,28 @@ HttpStatus.BAD_REQUEST : "not found user", "email exist", "validation exception"
     "firstname": "adam",
     "lastname": "adminski"
 }
+```
+
+### Zmiana hasła użytkownia
+możliwe odpowiedzi od servera:  
+HttpStatus.OK : "changed"  
+HttpStatus.BAD_REQUEST : "user not found"
+```
+127.0.0.1:8080/user/changepassword
+```
+```json
+{
+	"username": "kornel",
+    "password": "123"
+}
+```
+
+### Przypomnienie/zmiana hasła ktróre jest wysyłane na email użytkownika - method - GET
+możliwe odpowiedzi od servera:  
+HttpStatus.OK : "sends"
+```
+127.0.0.1:8080/sendMail/{username}
+127.0.0.1:8080/sendMail/admin
 ```
 
 # Car Service

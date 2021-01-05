@@ -127,4 +127,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         return user;
     }
+
+    @Override
+    public void changePassword(String userName, String newPassword) {
+
+        User user = null;
+        Session session = factory.openSession();
+
+        try {
+            session.beginTransaction();
+
+            user = findUserByUsername(userName);
+            user.setPassword(passwordEncoder.encode(newPassword));
+            session.update(user);
+
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
+
+    }
 }
