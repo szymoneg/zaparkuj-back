@@ -103,7 +103,7 @@ HttpStatus.BAD_REQUEST : "licence plate exist" ,"wrong car data"
 ```
 127.0.0.1:8080/changecar
 ```
-```
+```JSON
 {
     "idCar": 1,
     "mark": "Audi",
@@ -181,7 +181,7 @@ HttpStatus.OK : ArrayList<PlaceDTO.class>
 127.0.0.1:8080/places/{id}
 127.0.0.1:8080/places/1
 ```
-### Pobranie ilości wolnych/zajętych miejsc parkingowych w sektorze o danym id - method - GET (lepsza funkcja będzie zaimplementowana w Reservation Service)
+### Pobranie ilości wolnych/zajętych (w tym momencie) miejsc parkingowych w sektorze o danym id - method - GET (lepsza funkcja jest zaimplementowana w Reservation Service)
 odpowiedź  
 HttpStatus.OK : int
 ```
