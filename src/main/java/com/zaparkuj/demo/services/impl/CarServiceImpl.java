@@ -74,6 +74,8 @@ public class CarServiceImpl implements CarService{
         Session session = factory.openSession();
 
         try {
+            session.beginTransaction();
+
             Query query = session.createQuery("FROM Car WHERE licencePlate=:plate");
             query.setParameter("plate", licencePlate);
             car = (Car) query.getSingleResult();
@@ -118,6 +120,28 @@ public class CarServiceImpl implements CarService{
         }
 
         return car;
+    }
+
+    @Override
+    public void updateCar(Car car) {
+
+        Session session = factory.openSession();
+
+        try {
+            session.beginTransaction();
+
+            Car upCar = session.get(Car.class, car.getIdCar());
+            upCar.setMark(car.getMark());
+            upCar.setModel(car.getModel());
+            upCar.setLicencePlate(car.getLicencePlate());
+
+            session.update(upCar);
+
+            session.getTransaction().commit();
+        }
+        finally {
+            session.close();
+        }
     }
 
     @Override

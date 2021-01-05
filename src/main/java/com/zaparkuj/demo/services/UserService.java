@@ -20,6 +20,6 @@ public interface UserService {
     public User findUserByUsername(String username);
 
     /* ---- Funkcja zmieniająca hasło użytkownika ---- */
-    public void changePassword(String userName, String newPassword);
+    public void updatePassword(String userName, String newPassword);
 
 }

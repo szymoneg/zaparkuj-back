@@ -49,13 +49,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login","/register", "/sendMail/{username}", "/parkings","/parking/{id}","/places/{id}",
+                .antMatchers("/login","/register", "/sendmail/{username}", "/parkings","/parking/{id}","/places/{id}",
                         "/places/countPlaces/{id}/{status}", "/parkings/city/{city}", "/place/{id}",
                         "/sectors/{id}", "/sector/{id}", "/sector/countsector/{id}", "/place/countplaces/{id}",
                         "/reservations", "/reservation/id/{id}", "/reservation/user/{username}",
                         "/reservation/status/{status}/{username}", "/reservation/add",
                         "/user/changedata", "/deletereservation/{id}", "/user/changepassword",
-                        "/cars/{username}", "/addcar/{username}", "/deletecar/{id}",
+                        "/cars/{username}", "/addcar/{username}", "/deletecar/{id}", "/changecar",
                         "/api/javainuse"
                         )
                 .permitAll()

@@ -22,6 +22,9 @@ public interface CarService {
     /* ---- Funkcja znajdująca samochód o danym id ---- */
     public Car selectCarOfId(int id);
 
+    /* ---- Funkcja zmieniająca dane w samochodzie ---- */
+    public void updateCar(Car car);
+
     /* ---- Funkcja usuwająca samochód ---- */
     public boolean deleteCar(Car car);
 }

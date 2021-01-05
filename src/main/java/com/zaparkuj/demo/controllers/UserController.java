@@ -117,8 +117,8 @@ public class UserController {
         }
     }
 
-    @GetMapping("/sendMail/{username}")
-    public ResponseEntity<?> sendMailWithNewPassword(@PathVariable("username") String userName) throws MessagingException {
+    @GetMapping("/sendmail/{username}")
+    public ResponseEntity<?> sendMailWithNewPasswordController(@PathVariable("username") String userName) throws MessagingException {
 
         final String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         String generatePassword = "";
@@ -127,7 +127,7 @@ public class UserController {
             generatePassword += chars.charAt(new Random().nextInt(chars.length()));
         }
 
-        userService.changePassword(userName, generatePassword);
+        userService.updatePassword(userName, generatePassword);
 
         User user = userService.findUserByUsername(userName);
 
@@ -138,7 +138,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/changepassword", method = RequestMethod.POST)
-    public ResponseEntity<?> updatePassword(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> changeUserPasswordController(@RequestBody UserDTO userDTO) {
 
         User user = userService.findUserByUsername(userDTO.getUsername());
         if(user == null)
@@ -146,7 +146,7 @@ public class UserController {
         if(user == null)
             return new ResponseEntity<>(new MessageDTO("user not found"), HttpStatus.BAD_REQUEST);
 
-        userService.changePassword(user.getUsername(), userDTO.getPassword());
+        userService.updatePassword(user.getUsername(), userDTO.getPassword());
 
         return new ResponseEntity<>(new MessageDTO("changed"), HttpStatus.OK);
     }

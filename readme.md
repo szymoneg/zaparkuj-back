@@ -13,7 +13,7 @@ HttpStatus.BAD_REQUEST : "bad format username or email", "email or login exist"
 ```
 ```json
 {
-	"username": "admin",
+    "username": "admin",
     "email": "admin@admin.pl",
     "password": "123"
 }
@@ -48,7 +48,7 @@ HttpStatus.BAD_REQUEST : "not found user", "email exist", "validation exception"
 }
 ```
 
-### Zmiana hasła użytkownia
+### Zmiana hasła użytkownia - method - POST
 możliwe odpowiedzi od servera:  
 HttpStatus.OK : "changed"  
 HttpStatus.BAD_REQUEST : "user not found"
@@ -57,7 +57,7 @@ HttpStatus.BAD_REQUEST : "user not found"
 ```
 ```json
 {
-	"username": "kornel",
+    "username": "kornel",
     "password": "123"
 }
 ```
@@ -66,8 +66,8 @@ HttpStatus.BAD_REQUEST : "user not found"
 możliwe odpowiedzi od servera:  
 HttpStatus.OK : "sends"
 ```
-127.0.0.1:8080/sendMail/{username}
-127.0.0.1:8080/sendMail/admin
+127.0.0.1:8080/sendmail/{username}
+127.0.0.1:8080/sendmail/admin
 ```
 
 # Car Service
@@ -93,6 +93,22 @@ HttpStatus.BAD_REQUEST : "licence plate exist", "bad car mark", "bad car model",
     "mark": "Audi",
     "model": "RS5",
     "licencePlate": "KBR 0000"
+}
+```
+
+### Zmiana danych pojazdu uzytkownika - method - POST
+możliwe odpowiedzi od servera:  
+HttpStatus.OK : "changed"  
+HttpStatus.BAD_REQUEST : "licence plate exist" ,"wrong car data"
+```
+127.0.0.1:8080/changecar
+```
+```
+{
+    "idCar": 1,
+    "mark": "Audi",
+    "model": "RS5",
+    "licencePlate": "KBR 123444"
 }
 ```
 
@@ -140,7 +156,7 @@ HttpStatus.OK : SectorDTO.class
 127.0.0.1:8080/sector/1
 ```
 
-### Pobranie wszystkich sektorów na parkingu o podanym id
+### Pobranie wszystkich sektorów na parkingu o podanym id - method - GET
 odpowiedź  
 HttpStatus.OK : ArrayList<SectorDTO.class>
 ```

@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void changePassword(String userName, String newPassword) {
+    public void updatePassword(String userName, String newPassword) {
 
         User user = null;
         Session session = factory.openSession();

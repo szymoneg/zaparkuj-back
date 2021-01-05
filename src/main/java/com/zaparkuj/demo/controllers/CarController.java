@@ -8,6 +8,7 @@ import com.zaparkuj.demo.services.CarService;
 import com.zaparkuj.demo.services.UserService;
 import com.zaparkuj.demo.services.impl.CarServiceImpl;
 import com.zaparkuj.demo.services.impl.UserServiceImpl;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,29 @@ public class CarController {
         }
 
         return new ResponseEntity<>(new MessageDTO("created"), HttpStatus.CREATED);
+    }
+
+    /* ---- Funkcja zmieniająca dane samochodu użytkownika ---- */
+    @RequestMapping(value = "/changecar", method = RequestMethod.POST)
+    public ResponseEntity<?> changeCarController(@RequestBody CarDTO car) {
+
+        Car userCar = carService.selectCarOfLicencePlate(car.getLicencePlate());
+        if(userCar != null)
+            if(userCar.getIdCar() != car.getIdCar())
+                return new ResponseEntity<>(new MessageDTO("licence plate exist"), HttpStatus.BAD_REQUEST);
+
+        try {
+            userCar = carService.selectCarOfId(car.getIdCar());
+            userCar.setLicencePlate(car.getLicencePlate());
+            userCar.setMark(car.getMark());
+            userCar.setModel(car.getModel());
+            carService.updateCar(userCar);
+        }
+        catch (Exception exception) {
+            return new ResponseEntity<>(new MessageDTO("wrong car data"), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(new MessageDTO("changed"), HttpStatus.OK);
     }
 
     /* ---- Funkcja usuwająca samochód o podanym id ---- */
