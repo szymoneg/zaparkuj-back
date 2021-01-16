@@ -1,9 +1,8 @@
 package com.zaparkuj.demo.controllers;
 
 import com.zaparkuj.demo.entities.Parking;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import com.zaparkuj.demo.services.ParkingService;
+import com.zaparkuj.demo.services.impl.ParkingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,31 +15,43 @@ import java.util.ArrayList;
 public class ParkingController {
 
     @Autowired
-    SessionFactory factory = new Configuration()
-            .configure("hibernate.cfg.xml")
-            .addAnnotatedClass(Parking.class)
-            .buildSessionFactory();
+    ParkingService parkingService = new ParkingServiceImpl();
 
+    /* ---- Funkcja zwracająca parking o podanym id ---- */
     @CrossOrigin
-    @GetMapping("/parking")
-    public ResponseEntity<ArrayList<Parking>> selectAllParkingController() {
+    @GetMapping("/parking/{id}")
+    public ResponseEntity<Parking> getParkingController(@PathVariable("id") int id) {
 
-        System.out.println("Dziala");
+        Parking parking = parkingService.selectParking(id);
 
-        ArrayList<Parking> parkings = new ArrayList<>();
+        return new ResponseEntity<>(parking, HttpStatus.OK);
+    }
 
-        Session session = factory.openSession();
-        session.beginTransaction();
+    /* ---- Funkcja zwracjąca wszystkie dostępne parkingi z bazy danych ---- */
+    @CrossOrigin
+    @GetMapping("/parkings")
+    public ResponseEntity<ArrayList<Parking>> getAllParkingsController() {
 
-        Parking parking = session.get(Parking.class, 1);
+        ArrayList<Parking> parkings = parkingService.selectAllParkings();
 
-        parkings.add(parking);
+        return new ResponseEntity<>(parkings, HttpStatus.OK);
+    }
 
-        session.getTransaction(). commit();
+    /* ---- Funkcja zwracająca listę parkingów w danym mieście ---- */
+    @CrossOrigin
+    @GetMapping("/parkings/city/{city}")
+    public ResponseEntity<ArrayList<Parking>> getAllCityParkingsController(@PathVariable("city") String city) {
 
-        System.out.println(parkings);
+        ArrayList<Parking> parkings = parkingService.selectAllParkings();
+        int lastSpace;
 
-        session.close();
+        for(int i = 0; i < parkings.size(); i++) {
+            lastSpace = parkings.get(i).getAddress().lastIndexOf(' ');
+            if(!parkings.get(i).getAddress().substring(lastSpace + 1).equals(city)) {
+                parkings.remove(i);
+                i--;
+            }
+        }
 
         return new ResponseEntity<>(parkings, HttpStatus.OK);
     }

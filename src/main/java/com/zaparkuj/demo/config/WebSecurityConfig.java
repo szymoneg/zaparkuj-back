@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -47,7 +48,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.csrf().disable()
-                .authorizeRequests().antMatchers("/login","/register").permitAll()
+                .authorizeRequests()
+                .antMatchers("/login","/register", "/sendmail/{username}", "/parkings","/parking/{id}","/places/{id}",
+                        "/places/countPlaces/{id}/{status}", "/parkings/city/{city}", "/place/{id}",
+                        "/sectors/{id}", "/sector/{id}", "/sector/countsector/{id}", "/place/countplaces/{id}",
+                        "/reservations", "/reservation/id/{id}", "/reservation/user/{username}",
+                        "/reservation/status/{status}/{username}", "/reservation/add",
+                        "/user/changedata", "/deletereservation/{id}", "/user/changepassword",
+                        "/cars/{username}", "/addcar/{username}", "/deletecar/{id}", "/changecar",
+                        "/api/javainuse"
+                        )
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -55,5 +66,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity.addFilterBefore(jwtRequsetFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // web.ignoring().mvcMatchers("/");
+        web.ignoring().mvcMatchers("/swagger-ui/**","/swagger-ui.html/**" ,"/configuration/**", "/swagger-resources/**", "/v2/api-docs/**", "/v3/api-docs/**","/webjars/**");
     }
 }

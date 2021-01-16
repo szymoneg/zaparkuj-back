@@ -8,7 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "parking")
+@Table(name = "parking", schema = "parkit")
 @Setter
 @Getter
 @ToString
@@ -17,24 +17,26 @@ public class Parking {
     @Id
     @Column(name = "idparking")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idparking;
+    private int idParking;
 
     @Column(name = "park_name")
     private String parkname;
 
-    @Column(name = "cord")
-    private String cord;
+    @Column(name = "latitude")
+    private float latitude;
 
-    @Column(name = "adress")
-    private String adress;
+    @Column(name = "longitude")
+    private float longitude;
 
-    public Parking(String parkname, String cord, String adress) {
+    @Column(name = "address")
+    private String address;
+
+    public Parking() {}
+
+    public Parking(String parkname, float latitude, float longitude, String address) {
         this.parkname = parkname;
-        this.cord = cord;
-        this.adress = adress;
-    }
-
-    public Parking() {
-
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
     }
 }
