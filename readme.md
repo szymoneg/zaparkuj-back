@@ -1,5 +1,5 @@
 ## Front end 
-https://github.com/szymoneg/zaparkuj-back
+https://github.com/szymoneg/Zaparkuj
 
 ### Swagger API
 ```
