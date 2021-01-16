@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/reservation/status/{status}/{username}", "/reservation/add",
                         "/user/changedata", "/deletereservation/{id}", "/user/changepassword",
                         "/cars/{username}", "/addcar/{username}", "/deletecar/{id}", "/changecar",
-                        "/api/javainuse"
+                        "/api/javainuse","/edit/{username}"
                         )
                 .permitAll()
                 .anyRequest().authenticated()

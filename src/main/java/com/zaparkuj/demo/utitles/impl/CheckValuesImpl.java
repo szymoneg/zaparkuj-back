@@ -4,8 +4,6 @@ import com.zaparkuj.demo.utitles.CheckValues;
 
 public class CheckValuesImpl implements CheckValues {
 
-    //TODO implement this class
-
     @Override
     public boolean checkPassword(String password) {
         return false;

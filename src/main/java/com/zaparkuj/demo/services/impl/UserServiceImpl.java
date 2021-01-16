@@ -146,6 +146,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         finally {
             session.close();
         }
+    }
 
+    @Override
+    public User getDataUser(String username) {
+        //TODO to zmiany
+        return userRepository.findByUsername(username);
     }
 }

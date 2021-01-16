@@ -12,6 +12,8 @@ public interface UserService {
 
     User save(UserDTO user);
 
+    User getDataUser(String username);
+
     public boolean saveFullDataUser(User user);
 
     /* ---- Funkcja zwraca obiekt użytkownika szukanego po adresie email ---- */

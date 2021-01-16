@@ -150,4 +150,9 @@ public class UserController {
 
         return new ResponseEntity<>(new MessageDTO("changed"), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/edit/{username}", method = RequestMethod.GET)
+    public ResponseEntity<?> userFormEdit(@PathVariable("username") String username) {
+        return ResponseEntity.ok(userService.getDataUser(username));
+    }
 }
